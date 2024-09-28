@@ -1,0 +1,196 @@
+import { Estado } from './Estado';
+import { Transicion } from './Transicion';
+import { SimbolosEspeciales } from './SimbolosEspeciales';
+
+
+export class AFN {
+    static contIdAFN: number = 0;
+    edoIni: Estado | null;
+    edosAFN: Set<Estado> = new Set();
+    edosAcept: Set<Estado> = new Set();
+    alfabeto: Set<string> = new Set();
+    idAFN: number;
+
+    constructor() {
+        this.idAFN = AFN.contIdAFN++;
+        this.edoIni = null;
+    }
+
+    creaAFNBasico(s: string): AFN {
+        let t: Transicion;
+        let e1: Estado, e2: Estado;
+        e1 = new Estado();
+        e2 = new Estado();
+        t = new Transicion(s, undefined, e2);
+
+        // Set es una interfaz, por lo que no se puede asignar directamente
+        e1.SetTrans = new Set([t]);
+        e2.SetEdoAcept = true;        
+        this.alfabeto.add(s);
+        this.edoIni = e1;
+        this.edosAFN.add(e1);
+        this.edosAFN.add(e2);
+        this.edosAcept.add(e2);
+        return this;
+    }
+
+    creaAFNBasicoNum(s: number): AFN {
+        return this.creaAFNBasico(String.fromCharCode(s));
+    }
+
+    creaAFNBasicoRango(s1: string, s2: string): AFN {
+        let t: Transicion;
+        let e1: Estado, e2: Estado;
+        e1 = new Estado();
+        e2 = new Estado();
+        t = new Transicion(s1, s2, e2);
+        e1.SetTrans = new Set([t]);
+        e2.SetEdoAcept = true;
+
+        for (let i = s2.charCodeAt(0); i <= s1.charCodeAt(0); i++) {
+            this.alfabeto.add(String.fromCharCode(i));
+        }
+
+        this.edoIni = e1;
+        this.edosAFN.add(e1);
+        this.edosAFN.add(e2);
+        this.edosAcept.add(e2);
+        return this;
+    }
+
+    unirAFN(f2: AFN): AFN {
+        let e1 = new Estado();
+        let e2 = new Estado();
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, f2.edoIni!)]);
+
+        for (let e of this.edosAcept) {
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetEdoAcept = false;
+        }
+
+        for (let e of f2.edosAcept) {
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetEdoAcept = false;
+        }
+
+        this.edosAcept.clear();
+        f2.edosAcept.clear();
+        this.edoIni = e1;
+        e2.SetEdoAcept = true;
+        this.edosAcept.add(e2);
+        this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN, e1, e2]);
+        this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
+
+        return this;
+    }
+
+    concatenacionAFN(f2: AFN): AFN {
+        for (let t of f2.edoIni!.GetTrans) {
+            for (let e of this.edosAcept) {
+                e.SetTrans = new Set([t]);
+                e.SetEdoAcept = false;
+            }
+        }
+        f2.edosAFN.delete(f2.edoIni!);
+        this.edosAcept = f2.edosAcept;
+        this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN]);
+        this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
+        return this;
+    }
+
+    cerraduraPositiva(): AFN {
+        let e1 = new Estado();
+        let e2 = new Estado();
+
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        for (let e of this.edosAcept) {
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+            e.SetEdoAcept = false;
+        }
+
+        e2.SetEdoAcept = true;
+        this.edoIni = e1;
+        this.edosAcept.clear();
+        this.edosAcept.add(e2);
+        this.edosAFN.add(e1);
+        this.edosAFN.add(e2);
+        return this;
+    }
+
+    cerraduraKleene(): AFN {
+        let e1 = new Estado();
+        let e2 = new Estado();
+
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        for (let e of this.edosAcept) {
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+            e.SetEdoAcept = false;
+        }
+
+        e2.SetEdoAcept = true;
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+
+        this.edoIni = e1;
+        this.edosAcept.clear();
+        this.edosAcept.add(e2);
+        this.edosAFN.add(e1);
+        this.edosAFN.add(e2);
+        return this;
+    }
+
+    cerraduraOpcional(): AFN {
+        let e1 = new Estado();
+        let e2 = new Estado();
+
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        for (let e of this.edosAcept) {
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetEdoAcept = false;
+        }
+
+        e2.SetEdoAcept = true;
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+
+        this.edoIni = e1;
+        this.edosAcept.clear();
+        this.edosAcept.add(e2);
+        this.edosAFN.add(e1);
+        this.edosAFN.add(e2);
+        return this;
+    }
+
+    cerraduraEpsilon(e: Estado): Set<Estado> {
+        let conjunto: Set<Estado> = new Set();
+        let stackDeEstados: Estado[] = [e];
+
+        conjunto.add(e);
+
+        while (stackDeEstados.length > 0) {
+            let aux = stackDeEstados.pop()!;
+            for (let t of aux.GetTrans) {
+                let destino = t.getEdoTrans(SimbolosEspeciales.EPSILON);
+                if (destino && !conjunto.has(destino)) {
+                    conjunto.add(destino);
+                    stackDeEstados.push(destino);
+                }
+            }
+        }
+
+        return conjunto;
+    }
+
+    moverA(e: Estado, item: string): Set<Estado> {
+        let salidaEstados: Set<Estado> = new Set();
+        for (let t of e.GetTrans) {
+            let destino = t.getEdoTrans(item);
+            if (destino) {
+                salidaEstados.add(destino);
+            }
+        }
+        return salidaEstados;
+    }
+}

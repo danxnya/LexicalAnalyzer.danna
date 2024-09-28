@@ -1,6 +1,6 @@
 import { Estado } from './Estado';
 
-export class Transicion {
+class Transicion {
     simboloInf: string;
     simboloSup: string;
     edoDestino: Estado | null; // null es para representar que no tiene un estado destino o que no se ha asignado
@@ -28,7 +28,7 @@ export class Transicion {
     }
 
 
-    public SetTransicion(s1: string, s2?: string, e?: Estado): void {
+    public setTransicion(s1: string, s2?: string, e?: Estado): void {
         if (s2 === undefined && e instanceof Estado) {
             this.simboloInf = s1;
             this.simboloSup = s1;
@@ -57,3 +57,5 @@ export class Transicion {
     }
 
 }
+
+export { Transicion };

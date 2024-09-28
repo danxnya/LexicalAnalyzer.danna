@@ -49,17 +49,17 @@ class Estado {
 
 
     // usamos get y set en IdEstado, EdoAcept, Token y Trans para obtener y establecer los valores de las propiedades
-    public get IdEstado(): number { return this.idEstado1; }
-    public set IdEstado(value: number) { this.idEstado1 = value; }
+    public get GetIdEstado(): number { return this.idEstado1; }
+    public set SetIdEstado(value: number) { this.idEstado1 = value; }
 
-    public get EdoAcept(): boolean { return this.edoAcept1; }
-    public set EdoAcept(value: boolean) { this.edoAcept1 = value; }
+    public get GetEdoAcept(): boolean { return this.edoAcept1; }
+    public set SetEdoAcept(value: boolean) { this.edoAcept1 = value; }
 
-    public get Token(): number { return this.token1; }
-    public set Token(value: number) { this.token1 = value; }
+    public get GetToken(): number { return this.token1; }
+    public set SetToken(value: number) { this.token1 = value; }
 
-    public get Trans(): Set<Transicion> { return this.trans1; }
-    public set Trans(value: Set<Transicion>) { this.trans1 = value; }
+    public get GetTrans(): Set<Transicion> { return this.trans1; }
+    public set SetTrans(value: Set<Transicion>) { this.trans1 = value; }
 
 }
 

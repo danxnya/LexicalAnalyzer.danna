@@ -14,6 +14,7 @@ export class AFN {
     constructor() {
         this.idAFN = AFN.contIdAFN++;
         this.edoIni = null;
+        // No es necesario limpiar los sets, ya que están vacíos.
     }
 
     creaAFNBasico(s: string): AFN {
@@ -65,15 +66,26 @@ export class AFN {
 
         e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, f2.edoIni!)]);
 
-        for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-            e.SetEdoAcept = false;
-        }
+        // for (let e of this.edosAcept) {
+        //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        //     e.SetEdoAcept = false;
+        // }
 
-        for (let e of f2.edosAcept) {
+        this.edosAcept.forEach(e => {
             e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
             e.SetEdoAcept = false;
-        }
+        });
+
+
+        // for (let e of f2.edosAcept) {
+        //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        //     e.SetEdoAcept = false;
+        // }
+
+        f2.edosAcept.forEach(e => {
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetEdoAcept = false;
+        });
 
         this.edosAcept.clear();
         f2.edosAcept.clear();

@@ -3,7 +3,7 @@ import { Transicion } from './Transicion';
 import { SimbolosEspeciales } from './SimbolosEspeciales';
 
 
-export class AFN {
+class AFN {
     static contIdAFN: number = 0;
     edoIni: Estado | null;
     edosAFN: Set<Estado> = new Set();
@@ -200,6 +200,9 @@ export class AFN {
 
     cerraduraEpsilonConjunto(C: Set<Estado>): Set<Estado> {
         let R: Set<Estado> = new Set();
+        // Definimos una pila de estados llamada P
+        let P: Estado[] = [];
+        let aux: Estado;
         for (let e of C) {
             R = new Set([...R, ...this.cerraduraEpsilon(e)]);
         }
@@ -239,3 +242,6 @@ export class AFN {
     }
 
 }
+
+
+export { AFN };

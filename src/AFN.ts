@@ -175,6 +175,7 @@ export class AFN {
         return this;
     }
 
+
     cerraduraEpsilon(e: Estado): Set<Estado> {
         let conjunto: Set<Estado> = new Set();
         let stackDeEstados: Estado[] = [e];
@@ -195,14 +196,46 @@ export class AFN {
         return conjunto;
     }
 
+
+
+    cerraduraEpsilonConjunto(C: Set<Estado>): Set<Estado> {
+        let R: Set<Estado> = new Set();
+        for (let e of C) {
+            R = new Set([...R, ...this.cerraduraEpsilon(e)]);
+        }
+        return R;
+    }
+
+
     moverA(e: Estado, item: string): Set<Estado> {
-        let salidaEstados: Set<Estado> = new Set();
+        let R: Set<Estado> = new Set();
         for (let t of e.GetTrans) {
             let destino = t.getEdoTrans(item);
             if (destino) {
-                salidaEstados.add(destino);
+                R.add(destino);
             }
         }
-        return salidaEstados;
+        return R; // Donde R es el conjunto de estados de salida
     }
+
+
+    moverAConjunto(C: Set<Estado>, item: string): Set<Estado> {
+        let R: Set<Estado> = new Set();
+        for (let e of C) {
+            R = new Set([...R, ...this.moverA(e, item)]); // Union de conjuntos
+        }
+        return R;
+    }
+
+
+    IrA(e: Estado, simb: string): Set<Estado> {
+        return this.cerraduraEpsilonConjunto(this.moverA(e, simb));
+    }
+1
+    IrAConjunto(C: Set<Estado>, simb: string): Set<Estado> {
+        let R: Set<Estado> = new Set();
+        R = this.cerraduraEpsilonConjunto(this.moverAConjunto(C, simb));
+        return R;
+    }
+
 }

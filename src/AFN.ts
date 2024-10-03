@@ -17,42 +17,25 @@ class AFN {
         // No es necesario limpiar los sets, ya que están vacíos.
     }
 
-    creaAFNBasico(s: string): AFN {
+    creaAFNBasico(s: number): AFN;
+    creaAFNBasico(s: string): AFN;
+    creaAFNBasico(s: string, s2: string): AFN;
+    creaAFNBasico(s: any, s2?: string): AFN {
         let t: Transicion;
+        let s1: string = (typeof s === 'number' && typeof s2 === undefined) ? String.fromCharCode(s) : s;
         let e1: Estado, e2: Estado;
         e1 = new Estado();
-        e2 = new Estado();
-        t = new Transicion(s, undefined, e2);
-
+        e2 = new Estado()
+        t = new Transicion(s1, s2, e2);
         // Set es una interfaz, por lo que no se puede asignar directamente
         e1.SetTrans = new Set([t]);
-        e2.SetEdoAcept = true;        
-        this.alfabeto.add(s);
-        this.edoIni = e1;
-        this.edosAFN.add(e1);
-        this.edosAFN.add(e2);
-        this.edosAcept.add(e2);
-        return this;
-    }
-
-    creaAFNBasicoNum(s: number): AFN {
-        return this.creaAFNBasico(String.fromCharCode(s));
-    }
-
-    creaAFNBasicoRango(s1: string, s2: string): AFN {
-        let t: Transicion;
-        let e1: Estado, e2: Estado;
-        e1 = new Estado();
-        e2 = new Estado();
-        t = new Transicion(s1, s2, e2);
-        e1.SetTrans = new Set([t]);
         e2.SetEdoAcept = true;
-
-        for (let i = s2.charCodeAt(0); i <= s1.charCodeAt(0); i++) {
-            this.alfabeto.add(String.fromCharCode(i));
-        }
-
         this.edoIni = e1;
+        if (s2 === 'string')
+            for (let i = s2.charCodeAt(0); i <= s1.charCodeAt(0); i++)
+                this.alfabeto.add(String.fromCharCode(i));
+        else
+            this.alfabeto.add(s1);
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
         this.edosAcept.add(e2);
@@ -234,7 +217,6 @@ class AFN {
     IrA(e: Estado, simb: string): Set<Estado> {
         return this.cerraduraEpsilonConjunto(this.moverA(e, simb));
     }
-1
     IrAConjunto(C: Set<Estado>, simb: string): Set<Estado> {
         let R: Set<Estado> = new Set();
         R = this.cerraduraEpsilonConjunto(this.moverAConjunto(C, simb));

@@ -58,22 +58,22 @@ class AFN {
         let e2 = new Estado_1.Estado();
         e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, this.edoIni)]);
         e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, f2.edoIni)]);
-        // for (let e of this.edosAcept) {
-        //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-        //     e.SetEdoAcept = false;
-        // }
-        this.edosAcept.forEach(e => {
+        for (let e of this.edosAcept) {
             e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, e2)]);
             e.SetEdoAcept = false;
-        });
-        // for (let e of f2.edosAcept) {
-        //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-        //     e.SetEdoAcept = false;
-        // }
-        f2.edosAcept.forEach(e => {
+        }
+        //this.edosAcept.forEach(e => {
+        //    e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        //    e.SetEdoAcept = false;
+        //});
+        for (let e of f2.edosAcept) {
             e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, e2)]);
             e.SetEdoAcept = false;
-        });
+        }
+        //f2.edosAcept.forEach(e => {
+        //    e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        //    e.SetEdoAcept = false;
+        //});
         this.edosAcept.clear();
         f2.edosAcept.clear();
         this.edoIni = e1;

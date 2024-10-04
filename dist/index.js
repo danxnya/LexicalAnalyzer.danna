@@ -16,8 +16,8 @@ function main() {
     // afnA.concatenacionAFN(afnB); // Parece estar bien
     // afnA.cerraduraPositiva(); // Parece estar bien
     // afnA.cerraduraKleene(); // Parece estar bien
-    // afnA.cerraduraOpcional();
-    //afnA.cerraduraEpsilon(afnA.edoIni!); // PENDIENTE DE REVISAR; Consideramos que edoIni no es nulo xd
+    // afnA.cerraduraOpcional(); // Parece estar bien
+    //afnA.cerraduraEpsilon(afnA.edoIni!); // PENDIENTE DE REVISAR(Deberia estar bien); Consideramos que edoIni no es nulo xd
     afnA.moverA(afnA.edoIni, 'a'); // PENDIENTE DE REVISAR
     afnA.IrA(afnA.edoIni, 'a'); // PENDIENTE DE REVISAR
 }

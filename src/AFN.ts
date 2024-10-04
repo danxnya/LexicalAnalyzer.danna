@@ -70,8 +70,8 @@ class AFN {
     unirAFN(f2: AFN): AFN {
         let e1 = new Estado();
         let e2 = new Estado();
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
 
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
         e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, f2.edoIni!)]);
 
         // for (let e of this.edosAcept) {

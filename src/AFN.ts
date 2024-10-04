@@ -25,13 +25,17 @@ class AFN {
         let s1: string = (typeof s === 'number' && typeof s2 === undefined) ? String.fromCharCode(s) : s;
         let e1: Estado, e2: Estado;
         e1 = new Estado();
-        e2 = new Estado()
-        t = new Transicion(s1, s2, e2);
+        e2 = new Estado();
+        if (typeof s2 === 'string') {
+            t = new Transicion(s1, s2, e2);
+        } else {
+            t = new Transicion(s1, e2);
+        }
         // Set es una interfaz, por lo que no se puede asignar directamente
         e1.SetTrans = new Set([t]);
         e2.SetEdoAcept = true;
         this.edoIni = e1;
-        if (s2 === 'string')
+        if (typeof s2 === 'string')
             for (let i = s2.charCodeAt(0); i <= s1.charCodeAt(0); i++)
                 this.alfabeto.add(String.fromCharCode(i));
         else
@@ -45,9 +49,9 @@ class AFN {
     unirAFN(f2: AFN): AFN {
         let e1 = new Estado();
         let e2 = new Estado();
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
 
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, f2.edoIni!)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, f2.edoIni!)]);
 
         // for (let e of this.edosAcept) {
         //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
@@ -55,7 +59,7 @@ class AFN {
         // }
 
         this.edosAcept.forEach(e => {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
             e.SetEdoAcept = false;
         });
 
@@ -66,7 +70,7 @@ class AFN {
         // }
 
         f2.edosAcept.forEach(e => {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
             e.SetEdoAcept = false;
         });
 
@@ -99,10 +103,10 @@ class AFN {
         let e1 = new Estado();
         let e2 = new Estado();
 
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
             e.SetEdoAcept = false;
         }
 
@@ -119,15 +123,15 @@ class AFN {
         let e1 = new Estado();
         let e2 = new Estado();
 
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
             e.SetEdoAcept = false;
         }
 
         e2.SetEdoAcept = true;
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
 
         this.edoIni = e1;
         this.edosAcept.clear();
@@ -141,14 +145,14 @@ class AFN {
         let e1 = new Estado();
         let e2 = new Estado();
 
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
             e.SetEdoAcept = false;
         }
 
         e2.SetEdoAcept = true;
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
 
         this.edoIni = e1;
         this.edosAcept.clear();

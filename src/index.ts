@@ -13,12 +13,16 @@ function main() {
     let afnC = new AFN();
     afnC = afnC.creaAFNBasico('c');
 
-    // Para crear (a or b) and c
-    afnA.unirAFN(afnB);
-    afnA.concatenacionAFN(afnC);
+    // // Para crear (a or b) and c
+    // afnA.unirAFN(afnB);
+    // afnA.concatenacionAFN(afnC);
+
+    // // Para (a or b) or c
+    // afnA.unirAFN(afnB);
+    // afnA.unirAFN(afnC);
 
 
-    // afnA.unirAFN(afnB); // Revisar: Posible estado extra en la union
+    // afnA.unirAFN(afnB); // ya al puro pedo :)
 
     // afnA.concatenacionAFN(afnB); // Parece estar bien
 
@@ -30,9 +34,9 @@ function main() {
 
     //afnA.cerraduraEpsilon(afnA.edoIni!); // PENDIENTE DE REVISAR(Deberia estar bien); Consideramos que edoIni no es nulo xd
 
-    afnA.moverA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
+    // afnA.moverA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
 
-    afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
+    // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
 }   
 
 main();

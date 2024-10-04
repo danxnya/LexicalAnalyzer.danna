@@ -66,11 +66,11 @@ function EstadosSi() {
 }
 // Función para comparar conjuntos de estados (ya la tienes, pero la incluyo para contexto)
 function compararConjuntos(set1, set2) {
-    if (set1.size !== set2.size)
+    if (set1.size !== set2.size) {
         return false;
-    for (let item of set1) {
-        if (!set2.has(item))
-            return false;
     }
-    return true;
+    // Calculamos la diferencia simétrica
+    const diferenciaSimetrica = new Set([...set1].filter(x => !set2.has(x)).concat([...set2].filter(x => !set1.has(x))));
+    // Si la diferencia simétrica está vacía, los conjuntos son iguales
+    return diferenciaSimetrica.size === 0; // Retorna true si los conjuntos son iguales
 }

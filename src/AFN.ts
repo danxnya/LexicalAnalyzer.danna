@@ -71,6 +71,8 @@ class AFN {
         let e1 = new Estado();
         let e2 = new Estado();
 
+
+        // agregamos transiciones epsilon al estado inicial de cada AFN
         e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, this.edoIni!)]);
         e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, f2.edoIni!)]);
 
@@ -79,6 +81,7 @@ class AFN {
         //     e.SetEdoAcept = false;
         // }
 
+        // Recorremos el set de estados de aceptación de this para agregar transiciones epsilon y cambiar el estado de aceptación
         this.edosAcept.forEach(e => {
             e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
             e.SetEdoAcept = false;

@@ -56,24 +56,26 @@ class AFN {
     unirAFN(f2) {
         let e1 = new Estado_1.Estado();
         let e2 = new Estado_1.Estado();
+        // agregamos transiciones epsilon al estado inicial de cada AFN
         e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, this.edoIni)]);
         e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, f2.edoIni)]);
-        for (let e of this.edosAcept) {
+        // for (let e of this.edosAcept) {
+        //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        //     e.SetEdoAcept = false;
+        // }
+        // Recorremos el set de estados de aceptación de this para agregar transiciones epsilon y cambiar el estado de aceptación
+        this.edosAcept.forEach(e => {
             e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, e2)]);
             e.SetEdoAcept = false;
-        }
-        //this.edosAcept.forEach(e => {
-        //    e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-        //    e.SetEdoAcept = false;
-        //});
-        for (let e of f2.edosAcept) {
+        });
+        // for (let e of f2.edosAcept) {
+        //     e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
+        //     e.SetEdoAcept = false;
+        // }
+        f2.edosAcept.forEach(e => {
             e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, undefined, e2)]);
             e.SetEdoAcept = false;
-        }
-        //f2.edosAcept.forEach(e => {
-        //    e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, undefined, e2)]);
-        //    e.SetEdoAcept = false;
-        //});
+        });
         this.edosAcept.clear();
         f2.edosAcept.clear();
         this.edoIni = e1;

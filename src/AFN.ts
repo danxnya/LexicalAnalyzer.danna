@@ -43,6 +43,9 @@ class AFN {
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
         this.edosAcept.add(e2);
+        console.log(`\x1b[1m\x1b[31mAFN básico ${s}: OK\x1b[0m`);
+        console.log(`Estado inicial: ${e1.GetIdEstado}`);
+        console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
         return this;
     }
 
@@ -58,6 +61,7 @@ class AFN {
         //     e.SetEdoAcept = false;
         // }
 
+        // Recorremos el set de estados de aceptación de this para agregar transiciones epsilon y cambiar el estado de aceptación
         this.edosAcept.forEach(e => {
             e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
             e.SetEdoAcept = false;
@@ -82,6 +86,15 @@ class AFN {
         this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN, e1, e2]);
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
 
+        // Impresiones para verificar el funcionamiento
+
+        console.log(`\x1b[1m\x1b[31mUnión de ${this.idAFN} y ${f2.idAFN}: OK\x1b[0m`);
+
+
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+
         return this;
     }
 
@@ -96,6 +109,13 @@ class AFN {
         this.edosAcept = f2.edosAcept;
         this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN]);
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mConcatenación de ${this.idAFN} y ${f2.idAFN}: OK\x1b[0m`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+
         return this;
     }
 
@@ -116,6 +136,13 @@ class AFN {
         this.edosAcept.add(e2);
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mCerradura positiva de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+
         return this;
     }
 
@@ -138,6 +165,13 @@ class AFN {
         this.edosAcept.add(e2);
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mCerradura de Kleene de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+
         return this;
     }
 
@@ -159,7 +193,18 @@ class AFN {
         this.edosAcept.add(e2);
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+
         return this;
+
+
+
+
     }
 
 
@@ -180,6 +225,10 @@ class AFN {
             }
         }
 
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mCerradura epsilon de ${e.GetIdEstado}: ${conjunto.size} estados\x1b[0m`);
+
+
         return conjunto;
     }
 
@@ -193,19 +242,34 @@ class AFN {
         for (let e of C) {
             R = new Set([...R, ...this.cerraduraEpsilon(e)]);
         }
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mCerradura epsilon de conjunto: ${R.size} estados\x1b[0m`);
+
         return R;
     }
 
 
     moverA(e: Estado, item: string): Set<Estado> {
-        let R: Set<Estado> = new Set();
+        let SalidaEstados: Set<Estado> = new Set();
+        let aux: Estado | undefined;
+
         for (let t of e.GetTrans) {
-            let destino = t.getEdoTrans(item);
-            if (destino) {
-                R.add(destino);
+            aux = t.getEdoTrans(item);
+            if (aux != null) {
+                SalidaEstados.add(aux);
+            }
+            else {
+                console.log("No hay transición con el símbolo " + item);
             }
         }
-        return R; // Donde R es el conjunto de estados de salida
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mMoverA de ${e.GetIdEstado} por ${item}: ${SalidaEstados.size} estados\x1b[0m`);
+
+
+
+        return SalidaEstados; // Donde R es el conjunto de estados de salida
     }
 
 
@@ -214,16 +278,27 @@ class AFN {
         for (let e of C) {
             R = new Set([...R, ...this.moverA(e, item)]); // Union de conjuntos
         }
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mMoverA de conjunto por ${item}: ${R.size} estados\x1b[0m`);
+
         return R;
     }
 
 
     IrA(e: Estado, simb: string): Set<Estado> {
+        // Impresiones para verificar el funcionamiento
+        console.log(`IrA de ${e.GetIdEstado} por ${simb}`);
         return this.cerraduraEpsilonConjunto(this.moverA(e, simb));
     }
+
     IrAConjunto(C: Set<Estado>, simb: string): Set<Estado> {
         let R: Set<Estado> = new Set();
         R = this.cerraduraEpsilonConjunto(this.moverAConjunto(C, simb));
+
+        // Impresiones para verificar el funcionamiento
+        console.log(`\x1b[1m\x1b[31mIrA de conjunto por ${simb}: ${R.size} estados\x1b[0m`);
+
         return R;
     }
 

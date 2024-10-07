@@ -36,7 +36,7 @@ function EstadosSi() {
         // Recorremos cada símbolo del alfabeto
         for (const c of ArrAlfabeto) {
             Sk = new Si(); // Creamos un nuevo estado Sk
-            Sk.S = afn.IrAConjunto(Sj.S, c); // Calculamos IrA para el conjunto de estados con el símbolo c
+            Sk.S = afn.IrA(Sj.S, c); // Calculamos IrA para el conjunto de estados con el símbolo c
             if (Sk.S.size === 0) {
                 continue; // Si el conjunto está vacío, seguimos con el siguiente símbolo
             }

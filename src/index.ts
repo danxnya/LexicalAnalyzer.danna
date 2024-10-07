@@ -1,4 +1,5 @@
 import { AFN } from './AFN';
+import { Estado } from './Estado';
 
 function main() {
     console.log("TEST");
@@ -14,8 +15,8 @@ function main() {
     afnC = afnC.creaAFNBasico('c');
 
     // // Para crear (a or b) and c
-    // afnA.unirAFN(afnB);
-    // afnA.concatenacionAFN(afnC);
+    //afnA.unirAFN(afnB);
+    //afnA.concatenacionAFN(afnC);
 
     // // Para (a or b) or c
     // afnA.unirAFN(afnB);
@@ -37,6 +38,6 @@ function main() {
     // afnA.moverA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
 
     // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
-}   
+}
 
 main();

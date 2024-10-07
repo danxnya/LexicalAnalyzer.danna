@@ -10,12 +10,12 @@ function main() {
     let afnC = new AFN_1.AFN();
     afnC = afnC.creaAFNBasico('c');
     // // Para crear (a or b) and c
+    //afnA.unirAFN(afnB);
+    //afnA.concatenacionAFN(afnC);
+    // // Para (a or b) or c
     // afnA.unirAFN(afnB);
-    // afnA.concatenacionAFN(afnC);
-    // Para (a or b) or c
-    afnA.unirAFN(afnB);
-    afnA.unirAFN(afnC);
-    // afnA.unirAFN(afnB); // Revisar: Posible estado extra en la union
+    // afnA.unirAFN(afnC);
+    // afnA.unirAFN(afnB); // ya al puro pedo :)
     // afnA.concatenacionAFN(afnB); // Parece estar bien
     // afnA.cerraduraPositiva(); // Parece estar bien
     // afnA.cerraduraKleene(); // Parece estar bien

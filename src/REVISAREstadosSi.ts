@@ -4,12 +4,12 @@ import { Estado } from './Estado';
 class Si {
     i: number;                // Identificador
     S: Set<Estado>;           // Conjunto de estados
-    Transiciones: { [key: string]: number }; 
+    Transiciones: { [key: string]: number };
 
     constructor(i: number = 0, S: Set<Estado> = new Set()) {
         this.i = i;
         this.S = S;
-        this.Transiciones = {}; 
+        this.Transiciones = {};
     }
 }
 
@@ -21,7 +21,7 @@ function IndiceCaracter(alfabeto: string[], c: string): number {
 // Implementación de la función EstadosSi
 function EstadosSi(): void {
 
-    const afn = new AFN(); 
+    const afn = new AFN();
 
 
     let i: number, j: number, r: number;
@@ -53,7 +53,7 @@ function EstadosSi(): void {
         // Recorremos cada símbolo del alfabeto
         for (const c of ArrAlfabeto) {
             Sk = new Si();  // Creamos un nuevo estado Sk
-            Sk.S = afn.IrAConjunto(Sj.S, c);  // Calculamos IrA para el conjunto de estados con el símbolo c
+            Sk.S = afn.IrA(Sj.S, c);  // Calculamos IrA para el conjunto de estados con el símbolo c
 
             if (Sk.S.size === 0) {
                 continue;  // Si el conjunto está vacío, seguimos con el siguiente símbolo

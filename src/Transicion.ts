@@ -14,7 +14,6 @@ class Transicion {
     constructor(simboloInf: string, edoDestino: Estado);
     constructor(simboloInf: string, SimboloSupOredoDestino?: any, edoDestino?: Estado) {
         this.simboloInf = simboloInf;
-        this.simboloSup = '';
         if (typeof SimboloSupOredoDestino === 'string' && edoDestino instanceof Estado) {
             this.simboloSup = SimboloSupOredoDestino;
             this.edoDestino = edoDestino;

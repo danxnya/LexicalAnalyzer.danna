@@ -18,22 +18,22 @@ class Estado {
     - No toman parámetros
     - Deben retornar un valor
     - Se acceden como si fueran propiedades, sin paréntesis
-
+  
     Setters:
     - Se definen usando la palabra clave 'set'
     - Toman exactamente un parámetro
     - No retornan un valor
     - Se usan para asignar un valor a una propiedad
-
+  
     Ejemplo:
       get nombre(): string {
         return this._nombre;
       }
-
+  
       set nombre(nuevoNombre: string) {
         this._nombre = nuevoNombre;
       }
-
+  
     Los getters y setters permiten:
     1. Encapsulación: controlar el acceso a las propiedades
     2. Validación: verificar valores antes de asignarlos

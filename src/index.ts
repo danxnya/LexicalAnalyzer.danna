@@ -15,8 +15,8 @@ function main() {
     afnC = afnC.creaAFNBasico('c');
 
     // // Para crear (a or b) and c
-    //afnA.unirAFN(afnB);
-    //afnA.concatenacionAFN(afnC);
+    afnA.unirAFN(afnB);
+    afnA.concatenacionAFN(afnC);
 
     // // Para (a or b) or c
     // afnA.unirAFN(afnB);

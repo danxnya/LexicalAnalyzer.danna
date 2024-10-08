@@ -10,8 +10,8 @@ function main() {
     let afnC = new AFN_1.AFN();
     afnC = afnC.creaAFNBasico('c');
     // // Para crear (a or b) and c
-    //afnA.unirAFN(afnB);
-    //afnA.concatenacionAFN(afnC);
+    afnA.unirAFN(afnB);
+    afnA.concatenacionAFN(afnC);
     // // Para (a or b) or c
     // afnA.unirAFN(afnB);
     // afnA.unirAFN(afnC);

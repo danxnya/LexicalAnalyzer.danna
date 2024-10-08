@@ -15,3 +15,10 @@ Posible problema: En Java, el tipo char tiene un comportamiento bien definido pa
 En C# se puede sobrecargar un método para que tenga diferentes implementaciones dependiendo del número y tipo de parámetros que se le pasen. En TypeScript no se puede sobrecargar un método, pero se puede simular la sobrecarga usando sobrecarga de funciones.
 
 Posible problema: Al usar el método `transicion` se debe dejar como indefinida la funcion de en medio, **¿Eso causara problemas a futuro?** 
+
+## 4. Metodo para unir Expresiones regulares y no perder los tokens
+
+## 5. Clase Si interseccion para comparar y quitar las transición y en su lugar colocar el arreglo bidimensional
+
+## 6. Analizador léxico
+

@@ -200,10 +200,6 @@ class AFN {
         console.log(`Alfabeto: ${this.alfabeto.size}`);
 
         return this;
-
-
-
-
     }
 
     cerraduraEpsilon(e: Estado): Set<Estado>;
@@ -289,6 +285,45 @@ class AFN {
             // Impresiones para verificar el funcionamiento
             console.log(`\x1b[1m\x1b[31mIrA de conjunto por ${simb}: ${R.size} estados\x1b[0m`);
             return R;
+        } else {
+            throw new Error("Argumento inválido");
+        }
+    }
+    UnirER(f: AFN): AFN;
+    UnirER(C: Set<AFN>): AFN;
+    UnirER(forC: any): AFN {
+        if (forC instanceof AFN) {
+            let f: AFN = forC;
+            /*
+                 let e1 = new Estado();
+                    let e2 = new Estado();
+                    e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
+                    e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, f2.edoIni!)]);
+                    this.edosAcept.forEach(e => {
+                        e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
+                        e.SetEdoAcept = false;
+                    });
+                    f2.edosAcept.forEach(e => {
+                        e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
+                        e.SetEdoAcept = false;
+                    });
+                    this.edosAcept.clear();
+                    f2.edosAcept.clear();
+                    this.edoIni = e1;
+                    e2.SetEdoAcept = true;
+                    this.edosAcept.add(e2);
+                    this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN, e1, e2]);
+                    this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
+                    return this;
+            */
+            let e = new Estado()
+            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, f.edoIni!)]);
+
+            this.edoIni = e;
+            return this;
+        } else if (forC instanceof Set) {
+
+            return this;
         } else {
             throw new Error("Argumento inválido");
         }

@@ -289,44 +289,22 @@ class AFN {
             throw new Error("Argumento inválido");
         }
     }
-    UnirER(f: AFN): AFN;
-    UnirER(C: Set<AFN>): AFN;
-    UnirER(forC: any): AFN {
-        if (forC instanceof AFN) {
-            let f: AFN = forC;
-            /*
-                 let e1 = new Estado();
-                    let e2 = new Estado();
-                    e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
-                    e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, f2.edoIni!)]);
-                    this.edosAcept.forEach(e => {
-                        e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
-                        e.SetEdoAcept = false;
-                    });
-                    f2.edosAcept.forEach(e => {
-                        e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
-                        e.SetEdoAcept = false;
-                    });
-                    this.edosAcept.clear();
-                    f2.edosAcept.clear();
-                    this.edoIni = e1;
-                    e2.SetEdoAcept = true;
-                    this.edosAcept.add(e2);
-                    this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN, e1, e2]);
-                    this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
-                    return this;
-            */
-            let e = new Estado()
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, f.edoIni!)]);
 
-            this.edoIni = e;
-            return this;
-        } else if (forC instanceof Set) {
-
-            return this;
-        } else {
-            throw new Error("Argumento inválido");
+    UnirER(C: Set<AFN>): AFN {
+        let e = new Estado();
+        for (let f of C) {
+            e.SetTrans = new Set([...e.GetTrans, new Transicion(SimbolosEspeciales.EPSILON, f.edoIni!)]);
+            this.alfabeto = new Set([...this.alfabeto, ...f.alfabeto]);
+            this.edosAFN = new Set([...this.edosAFN, ...f.edosAFN]);
+            this.edosAcept = new Set([...this.edosAcept, ...f.edosAcept]);
         }
+        this.edoIni = e;
+        this.edosAFN.add(e);
+        console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+        return this;
     }
 }
 

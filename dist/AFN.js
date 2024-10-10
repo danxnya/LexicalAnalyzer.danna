@@ -244,6 +244,22 @@ class AFN {
             throw new Error("Argumento inválido");
         }
     }
+    UnirER(C) {
+        let e = new Estado_1.Estado();
+        for (let f of C) {
+            e.SetTrans = new Set([...e.GetTrans, new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, f.edoIni)]);
+            this.alfabeto = new Set([...this.alfabeto, ...f.alfabeto]);
+            this.edosAFN = new Set([...this.edosAFN, ...f.edosAFN]);
+            this.edosAcept = new Set([...this.edosAcept, ...f.edosAcept]);
+        }
+        this.edoIni = e;
+        this.edosAFN.add(e);
+        console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+        return this;
+    }
 }
 exports.AFN = AFN;
 AFN.contIdAFN = 0;

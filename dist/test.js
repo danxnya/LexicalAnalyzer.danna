@@ -47,6 +47,7 @@ function main() {
     C.add(Pder);
     C.add(Num1);
     C.add(space);
+    console.log("Llamada de UnirER para C");
     let NewRes = new AFN_1.AFN().UnirER(C);
     console.log(NewRes);
 }

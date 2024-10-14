@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Estado = void 0;
 class Estado {
     constructor() {
-        this.edoAcept1 = false;
-        this.token1 = -1;
-        this.idEstado1 = Estado.ContadorIdEstado++;
-        this.trans1 = new Set();
-        this.trans1.clear();
+        this.edoAcept = false;
+        this.token = -1;
+        this.idEstado = Estado.ContadorIdEstado++;
+        this.trans = new Set();
+        this.trans.clear();
     }
     /*Getters y Setters
     Los getters y setters en TypeScript son métodos especiales que permiten
@@ -41,14 +41,14 @@ class Estado {
     4. Notificaciones: ejecutar código adicional al cambiar una propiedad
     */
     // usamos get y set en IdEstado, EdoAcept, Token y Trans para obtener y establecer los valores de las propiedades
-    get GetIdEstado() { return this.idEstado1; }
-    set SetIdEstado(value) { this.idEstado1 = value; }
-    get GetEdoAcept() { return this.edoAcept1; }
-    set SetEdoAcept(value) { this.edoAcept1 = value; }
-    get GetToken() { return this.token1; }
-    set SetToken(value) { this.token1 = value; }
-    get GetTrans() { return this.trans1; }
-    set SetTrans(value) { this.trans1 = value; }
+    get GetIdEstado() { return this.idEstado; }
+    set SetIdEstado(value) { this.idEstado = value; }
+    get GetEdoAcept() { return this.edoAcept; }
+    set SetEdoAcept(value) { this.edoAcept = value; }
+    get GetToken() { return this.token; }
+    set SetToken(value) { this.token = value; }
+    get GetTrans() { return this.trans; }
+    set SetTrans(value) { this.trans = value; }
 }
 exports.Estado = Estado;
 Estado.ContadorIdEstado = 0;

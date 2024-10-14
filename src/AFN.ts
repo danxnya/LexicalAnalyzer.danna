@@ -308,5 +308,4 @@ class AFN {
     }
 }
 
-
 export { AFN };

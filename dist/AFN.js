@@ -97,7 +97,7 @@ class AFN {
     concatenacionAFN(f2) {
         for (let t of f2.edoIni.GetTrans) {
             for (let e of this.edosAcept) {
-                e.SetTrans = new Set([t]);
+                e.SetTrans = new Set([...e.GetTrans, t]);
                 e.SetEdoAcept = false;
             }
         }
@@ -117,8 +117,7 @@ class AFN {
         let e2 = new Estado_1.Estado();
         e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, this.edoIni)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, e2)]);
-            e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, this.edoIni)]);
+            e.SetTrans = new Set([...e.GetTrans, new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, e2), new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, this.edoIni)]);
             e.SetEdoAcept = false;
         }
         e2.SetEdoAcept = true;
@@ -162,11 +161,11 @@ class AFN {
         let e2 = new Estado_1.Estado();
         e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, this.edoIni)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, e2)]);
+            e.SetTrans = new Set([...e.GetTrans, new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, e2)]);
             e.SetEdoAcept = false;
         }
         e2.SetEdoAcept = true;
-        e1.SetTrans = new Set([new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, e2)]);
+        e1.SetTrans = new Set([...e1.GetTrans, new Transicion_1.Transicion(SimbolosEspeciales_1.SimbolosEspeciales.EPSILON, e2)]);
         this.edoIni = e1;
         this.edosAcept.clear();
         this.edosAcept.add(e2);

@@ -24,9 +24,7 @@ function main() {
     // afnA.moverA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
     // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
     let C = new Set();
-    let Suma = new AFN_1.AFN();
-    Suma = Suma.creaAFNBasico('+');
-    Suma.imprimirAFN();
+    let Suma = new AFN_1.AFN().creaAFNBasico('+');
     let Resta = new AFN_1.AFN().creaAFNBasico('-');
     let Mult = new AFN_1.AFN().creaAFNBasico('*');
     let Div = new AFN_1.AFN().creaAFNBasico('/');
@@ -38,7 +36,7 @@ function main() {
     Num2.cerraduraPositiva();
     let punto = new AFN_1.AFN().creaAFNBasico('.');
     punto.concatenacionAFN(Num2);
-    punto.cerraduraPositiva();
+    punto.cerraduraOpcional();
     Num1.concatenacionAFN(punto);
     let space = new AFN_1.AFN().creaAFNBasico(' ').cerraduraPositiva();
     C.add(Suma);

@@ -128,7 +128,7 @@ class AFN {
     concatenacionAFN(f2: AFN): AFN {
         for (let t of f2.edoIni!.GetTrans) {
             for (let e of this.edosAcept) {
-                e.SetTrans = new Set([t]);
+                e.SetTrans = new Set([...e.GetTrans, t]);
                 e.SetEdoAcept = false;
             }
         }
@@ -152,8 +152,7 @@ class AFN {
 
         e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
+            e.SetTrans = new Set([...e.GetTrans, new Transicion(SimbolosEspeciales.EPSILON, e2), new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
             e.SetEdoAcept = false;
         }
 
@@ -208,12 +207,12 @@ class AFN {
 
         e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, this.edoIni!)]);
         for (let e of this.edosAcept) {
-            e.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
+            e.SetTrans = new Set([...e.GetTrans, new Transicion(SimbolosEspeciales.EPSILON, e2)]);
             e.SetEdoAcept = false;
         }
 
         e2.SetEdoAcept = true;
-        e1.SetTrans = new Set([new Transicion(SimbolosEspeciales.EPSILON, e2)]);
+        e1.SetTrans = new Set([...e1.GetTrans, new Transicion(SimbolosEspeciales.EPSILON, e2)]);
 
         this.edoIni = e1;
         this.edosAcept.clear();

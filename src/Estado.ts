@@ -2,17 +2,17 @@ import { Transicion } from "./Transicion";
 
 class Estado {
   private static ContadorIdEstado: number = 0;
-  private idEstado1: number;
-  private edoAcept1: boolean;
-  private token1: number;
-  private trans1: Set<Transicion>;
+  private idEstado: number;
+  private edoAcept: boolean;
+  private token: number;
+  private trans: Set<Transicion>;
 
   constructor() {
-    this.edoAcept1 = false;
-    this.token1 = -1;
-    this.idEstado1 = Estado.ContadorIdEstado++;
-    this.trans1 = new Set<Transicion>();
-    this.trans1.clear();
+    this.edoAcept = false;
+    this.token = -1;
+    this.idEstado = Estado.ContadorIdEstado++;
+    this.trans = new Set<Transicion>();
+    this.trans.clear();
   }
 
   /*Getters y Setters
@@ -49,17 +49,17 @@ class Estado {
 
 
   // usamos get y set en IdEstado, EdoAcept, Token y Trans para obtener y establecer los valores de las propiedades
-  public get GetIdEstado(): number { return this.idEstado1; }
-  public set SetIdEstado(value: number) { this.idEstado1 = value; }
+  public get GetIdEstado(): number { return this.idEstado; }
+  public set SetIdEstado(value: number) { this.idEstado = value; }
 
-  public get GetEdoAcept(): boolean { return this.edoAcept1; }
-  public set SetEdoAcept(value: boolean) { this.edoAcept1 = value; }
+  public get GetEdoAcept(): boolean { return this.edoAcept; }
+  public set SetEdoAcept(value: boolean) { this.edoAcept = value; }
 
-  public get GetToken(): number { return this.token1; }
-  public set SetToken(value: number) { this.token1 = value; }
+  public get GetToken(): number { return this.token; }
+  public set SetToken(value: number) { this.token = value; }
 
-  public get GetTrans(): Set<Transicion> { return this.trans1; }
-  public set SetTrans(value: Set<Transicion>) { this.trans1 = value; }
+  public get GetTrans(): Set<Transicion> { return this.trans; }
+  public set SetTrans(value: Set<Transicion>) { this.trans = value; }
 }
 
 export { Estado };

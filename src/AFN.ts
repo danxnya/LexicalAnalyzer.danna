@@ -16,7 +16,7 @@ class AFN {
         // No es necesario limpiar los sets, ya que están vacíos.
     }
 
-    creaAFNBasico(s: number): AFN;
+    creaAFNBasico(s: number): AFN;//Refactorizar si hay tiempo para que sea más legible
     creaAFNBasico(s: string): AFN;
     creaAFNBasico(s: string, s2: string): AFN;
     creaAFNBasico(s: any, s2?: string): AFN {
@@ -300,7 +300,7 @@ class AFN {
         }
         this.edoIni = e;
         this.edosAFN.add(e);
-        console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`\x1b[1m\x1b[31mUnion especial de expresiones regulares de ${this.idAFN}: OK\x1b[0m`);
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);

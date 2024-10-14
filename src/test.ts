@@ -64,8 +64,6 @@ function main() {
     C.add(space);
     let NewRes: AFN = new AFN().UnirER(C);
     console.log(NewRes);
-
-
 }
 
 main();

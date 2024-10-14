@@ -12,34 +12,51 @@ class AFN {
         this.idAFN = AFN.contIdAFN++;
         // No es necesario limpiar los sets, ya que están vacíos.
     }
-    creaAFNBasico(s, s2) {
-        let t;
-        let s1 = (typeof s === 'number' && typeof s2 === undefined) ? String.fromCharCode(s) : s;
-        let e1, e2;
-        e1 = new Estado_1.Estado();
-        e2 = new Estado_1.Estado();
-        if (typeof s2 === 'string') {
+    creaAFNBasico(SorN1, SorN2) {
+        if (typeof SorN2 === 'number' || typeof SorN2 === 'string') {
+            let s1, s2;
+            s1 = (typeof SorN1 === 'number') ? String.fromCharCode(SorN1) : SorN1;
+            s2 = (typeof SorN2 === 'number') ? String.fromCharCode(SorN2) : SorN2;
+            let t;
+            let e1, e2;
+            e1 = new Estado_1.Estado();
+            e2 = new Estado_1.Estado();
+            e2.SetEdoAcept = true;
             t = new Transicion_1.Transicion(s1, s2, e2);
+            e1.SetTrans = new Set([t]);
+            for (let i = s1.charCodeAt(0); i <= s2.charCodeAt(0); i++)
+                this.alfabeto.add(String.fromCharCode(i));
+            this.edoIni = e1;
+            this.edosAFN.add(e1);
+            this.edosAFN.add(e2);
+            this.edosAcept.add(e2);
+            console.log(`\x1b[1m\x1b[31mAFN básico ${s1} - ${s2}: OK\x1b[0m`);
+            console.log(`Estado inicial: ${e1.GetIdEstado}`);
+            console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
+            return this;
+        }
+        else if (typeof SorN2 === 'undefined') {
+            let s = (typeof SorN1 === 'number') ? String.fromCharCode(SorN1) : SorN1;
+            let t;
+            let e1, e2;
+            e1 = new Estado_1.Estado();
+            e2 = new Estado_1.Estado();
+            e2.SetEdoAcept = true;
+            t = new Transicion_1.Transicion(s, e2);
+            e1.SetTrans = new Set([t]);
+            this.edoIni = e1;
+            this.edosAFN.add(e1);
+            this.edosAFN.add(e2);
+            this.edosAcept.add(e2);
+            this.alfabeto.add(s);
+            console.log(`\x1b[1m\x1b[31mAFN básico ${s}: OK\x1b[0m`);
+            console.log(`Estado inicial: ${e1.GetIdEstado}`);
+            console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
+            return this;
         }
         else {
-            t = new Transicion_1.Transicion(s1, e2);
+            throw new Error('Argumentos inválidos');
         }
-        // Set es una interfaz, por lo que no se puede asignar directamente
-        e1.SetTrans = new Set([t]);
-        e2.SetEdoAcept = true;
-        this.edoIni = e1;
-        if (typeof s2 === 'string')
-            for (let i = s2.charCodeAt(0); i <= s1.charCodeAt(0); i++)
-                this.alfabeto.add(String.fromCharCode(i));
-        else
-            this.alfabeto.add(s1);
-        this.edosAFN.add(e1);
-        this.edosAFN.add(e2);
-        this.edosAcept.add(e2);
-        console.log(`\x1b[1m\x1b[31mAFN básico ${s}: OK\x1b[0m`);
-        console.log(`Estado inicial: ${e1.GetIdEstado}`);
-        console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
-        return this;
     }
     unirAFN(f2) {
         let e1 = new Estado_1.Estado();
@@ -254,11 +271,31 @@ class AFN {
         }
         this.edoIni = e;
         this.edosAFN.add(e);
-        console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
+        console.log(`\x1b[1m\x1b[31mUnion especial de expresiones regulares de ${this.idAFN}: OK\x1b[0m`);
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);
         return this;
+    }
+    imprimirAFN() {
+        var _a, _b;
+        console.log(`\n\x1b[1m\x1b[31mAFN ${this.idAFN}\x1b[0m`);
+        console.log(`Estado inicial: ${(_a = this.edoIni) === null || _a === void 0 ? void 0 : _a.GetIdEstado}`);
+        console.log(`Estados de aceptación: ${this.edosAcept.size}`);
+        console.log(`Estados AFN: ${this.edosAFN.size}`);
+        console.log(`Alfabeto: ${this.alfabeto.size}`);
+        for (let e of this.edosAFN) {
+            console.log(`\nEstado: ${e.GetIdEstado}`);
+            console.log(`Transiciones:`);
+            for (let t of e.GetTrans) {
+                if (t.getSimboloInf() === t.getSimboloSup())
+                    console.log(`\tSímbolo: ${t.getSimboloInf()}`);
+                else
+                    console.log(`\tSímbolo: ${t.getSimboloInf()} - ${t.getSimboloSup()})`);
+                console.log(`\tDestino: ${(_b = t.edoDestino) === null || _b === void 0 ? void 0 : _b.GetIdEstado}`);
+            }
+            console.log(`Es estado de aceptación: ${e.GetEdoAcept}`);
+        }
     }
 }
 exports.AFN = AFN;

@@ -3,8 +3,6 @@ import { Estado } from './Estado';
 
 function main() {
     console.log("TEST");
-
-
     //let afnA = new AFN();
     //afnA = afnA.creaAFNBasico('a');
 
@@ -39,7 +37,9 @@ function main() {
 
     // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
     let C: Set<AFN> = new Set<AFN>();
-    let Suma: AFN = new AFN().creaAFNBasico('+');
+    let Suma: AFN = new AFN();
+    Suma = Suma.creaAFNBasico('+');
+    Suma.imprimirAFN();
     let Resta: AFN = new AFN().creaAFNBasico('-');
     let Mult: AFN = new AFN().creaAFNBasico('*');
     let Div: AFN = new AFN().creaAFNBasico('/');
@@ -63,7 +63,7 @@ function main() {
     C.add(Num1);
     C.add(space);
     let NewRes: AFN = new AFN().UnirER(C);
-    console.log(NewRes);
+    NewRes.imprimirAFN();
 }
 
 main();

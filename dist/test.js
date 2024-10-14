@@ -24,7 +24,9 @@ function main() {
     // afnA.moverA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
     // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
     let C = new Set();
-    let Suma = new AFN_1.AFN().creaAFNBasico('+');
+    let Suma = new AFN_1.AFN();
+    Suma = Suma.creaAFNBasico('+');
+    Suma.imprimirAFN();
     let Resta = new AFN_1.AFN().creaAFNBasico('-');
     let Mult = new AFN_1.AFN().creaAFNBasico('*');
     let Div = new AFN_1.AFN().creaAFNBasico('/');
@@ -48,6 +50,6 @@ function main() {
     C.add(Num1);
     C.add(space);
     let NewRes = new AFN_1.AFN().UnirER(C);
-    console.log(NewRes);
+    NewRes.imprimirAFN();
 }
 main();

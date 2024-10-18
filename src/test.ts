@@ -1,5 +1,6 @@
 import { AFN } from './AFN';
 import { Estado } from './Estado';
+import { Si } from './EstadosSi';
 
 function main() {
     console.log("TEST");
@@ -36,6 +37,9 @@ function main() {
     // afnA.moverA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
 
     // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
+
+    //Crear AFN de un simbolo
+
     let C: Set<AFN> = new Set<AFN>();
     let Suma: AFN = new AFN().creaAFNBasico('+');
     let Resta: AFN = new AFN().creaAFNBasico('-');
@@ -43,14 +47,7 @@ function main() {
     let Div: AFN = new AFN().creaAFNBasico('/');
     let Pizq: AFN = new AFN().creaAFNBasico('(');
     let Pder: AFN = new AFN().creaAFNBasico(')');
-    let Num1: AFN = new AFN().creaAFNBasico('0', '9');
-    Num1.cerraduraPositiva();
-    let Num2: AFN = new AFN().creaAFNBasico('0', '9');
-    Num2.cerraduraPositiva();
-    let punto: AFN = new AFN().creaAFNBasico('.');
-    punto.concatenacionAFN(Num2);
-    punto.cerraduraOpcional();
-    Num1.concatenacionAFN(punto);
+    let NUM: AFN = new AFN().creaAFNBasico('0', '9').cerraduraPositiva().concatenacionAFN(new AFN().creaAFNBasico('.').concatenacionAFN(new AFN().creaAFNBasico('0', '9').cerraduraPositiva()).cerraduraOpcional());
     let space: AFN = new AFN().creaAFNBasico(' ').cerraduraPositiva();
     C.add(Suma);
     C.add(Resta);
@@ -58,13 +55,21 @@ function main() {
     C.add(Div);
     C.add(Pizq);
     C.add(Pder);
-    C.add(Num1);
+    C.add(NUM);
     C.add(space);
-
-
-    console.log("Llamada de UnirER para C"); 
     let NewRes: AFN = new AFN().UnirER(C);
-    NewRes.imprimirAFN();
+
+    const AFD: Map<Number, Array<Number>> = NewRes.ToAFD();
+    for (let i of AFD.keys()) {
+        console.log(`Estado ${i}:`);
+        for (let j = 0; j < AFD.get(i)!.length - 1; j++) {
+            if (AFD.get(i)![j] === -1) continue;
+            console.log(`\t <${String.fromCharCode(j)}> => ${AFD.get(i)![j]}`);
+        }
+        if (AFD.get(i)![256] === -1) continue;
+        console.log(`\t TOKEN =>${AFD.get(i)![256]}`);
+    }
+
 }
 
 main();

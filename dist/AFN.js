@@ -35,9 +35,9 @@ class AFN {
             this.edosAFN.add(e1);
             this.edosAFN.add(e2);
             this.edosAcept.add(e2);
-            console.log(`\x1b[1m\x1b[31mAFN básico ${s1} - ${s2}: OK\x1b[0m`);
-            console.log(`Estado inicial: ${e1.GetIdEstado}`);
-            console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
+            //console.log(`\x1b[1m\x1b[31mAFN básico ${s1} - ${s2}: OK\x1b[0m`);
+            //console.log(`Estado inicial: ${e1.GetIdEstado}`);
+            //console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
             return this;
         }
         else if (typeof SorN2 === 'undefined') {
@@ -54,9 +54,9 @@ class AFN {
             this.edosAFN.add(e2);
             this.edosAcept.add(e2);
             this.alfabeto.add(s);
-            console.log(`\x1b[1m\x1b[31mAFN básico ${s}: OK\x1b[0m`);
-            console.log(`Estado inicial: ${e1.GetIdEstado}`);
-            console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
+            //console.log(`\x1b[1m\x1b[31mAFN básico ${s}: OK\x1b[0m`);
+            //console.log(`Estado inicial: ${e1.GetIdEstado}`);
+            //console.log(`Estado de aceptación: ${e2.GetIdEstado}`);
             return this;
         }
         else {
@@ -93,10 +93,14 @@ class AFN {
         this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN, e1, e2]);
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
         // Impresiones para verificar el funcionamiento
+        /*
         console.log(`\x1b[1m\x1b[31mUnión de ${this.idAFN} y ${f2.idAFN}: OK\x1b[0m`);
+
+
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);
+        */
         return this;
     }
     concatenacionAFN(f2) {
@@ -110,11 +114,12 @@ class AFN {
         this.edosAcept = f2.edosAcept;
         this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN]);
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
-        // Impresiones para verificar el funcionamiento
+        /*// Impresiones para verificar el funcionamiento
         console.log(`\x1b[1m\x1b[31mConcatenación de ${this.idAFN} y ${f2.idAFN}: OK\x1b[0m`);
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);
+        */
         return this;
     }
     cerraduraPositiva() {
@@ -131,11 +136,12 @@ class AFN {
         this.edosAcept.add(e2);
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
-        // Impresiones para verificar el funcionamiento
+        /*// Impresiones para verificar el funcionamiento
         console.log(`\x1b[1m\x1b[31mCerradura positiva de ${this.idAFN}: OK\x1b[0m`);
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);
+        */
         return this;
     }
     cerraduraKleene() {
@@ -153,11 +159,12 @@ class AFN {
         this.edosAcept.add(e2);
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
-        // Impresiones para verificar el funcionamiento
+        /*// Impresiones para verificar el funcionamiento
         console.log(`\x1b[1m\x1b[31mCerradura de Kleene de ${this.idAFN}: OK\x1b[0m`);
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);
+        */
         return this;
     }
     cerraduraOpcional() {
@@ -176,10 +183,11 @@ class AFN {
         this.edosAFN.add(e1);
         this.edosAFN.add(e2);
         // Impresiones para verificar el funcionamiento
-        console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
+        /*console.log(`\x1b[1m\x1b[31mCerradura opcional de ${this.idAFN}: OK\x1b[0m`);
         console.log(`Estados de aceptación: ${this.edosAcept.size}`);
         console.log(`Estados AFN: ${this.edosAFN.size}`);
         console.log(`Alfabeto: ${this.alfabeto.size}`);
+        */
         return this;
     }
     cerraduraEpsilon(EorC) {

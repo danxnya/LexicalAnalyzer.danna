@@ -1,6 +1,7 @@
 import { AFN } from './AFN';
 import { Estado } from './Estado';
-import { Si } from './EstadosSi';
+import { Si } from './CompareSets';
+import { ER } from './ER'
 
 function main() {
     console.log("TEST");
@@ -39,8 +40,7 @@ function main() {
     // afnA.IrA(afnA.edoIni!, 'a'); // PENDIENTE DE REVISAR
 
     //Crear AFN de un simbolo
-
-    let C: Set<AFN> = new Set<AFN>();
+    /*
     let Suma: AFN = new AFN().creaAFNBasico('+');
     let Resta: AFN = new AFN().creaAFNBasico('-');
     let Mult: AFN = new AFN().creaAFNBasico('*');
@@ -69,7 +69,29 @@ function main() {
         if (AFD.get(i)![256] === -1) continue;
         console.log(`\t TOKEN =>${AFD.get(i)![256]}`);
     }
-
+    */
+    let C: Set<AFN> = new Set<AFN>();
+    let testAFN: AFN;
+    let testER: ER;
+    C.add(new ER('\\+').generateAFN());
+    C.add(new ER('-').generateAFN());
+    C.add(new ER('\\*').generateAFN());
+    C.add(new ER('/').generateAFN());
+    C.add(new ER('\\(').generateAFN());
+    C.add(new ER('\\)').generateAFN());
+    C.add(new ER(' +').generateAFN());
+    C.add(new ER('[0-9]+.(\\..+[0-9]+)?').generateAFN());
+    let NewRes: AFN = new AFN().UnirER(C);
+    const AFD: Map<Number, Array<Number>> = NewRes.ToAFD();
+    for (let i of AFD.keys()) {
+        console.log(`Estado ${i}:`);
+        for (let j = 0; j < AFD.get(i)!.length - 1; j++) {
+            if (AFD.get(i)![j] === -1) continue;
+            console.log(`\t <${String.fromCharCode(j)}> => ${AFD.get(i)![j]}`);
+        }
+        if (AFD.get(i)![256] === -1) continue;
+        console.log(`\t TOKEN =>${AFD.get(i)![256]}`);
+    }
 }
 
 main();

@@ -1,4 +1,4 @@
-import { AFN } from './AFN';
+//import { AFN } from './AFN';
 import { Estado } from './Estado';
 
 class Si {

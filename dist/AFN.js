@@ -1,14 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AFN = void 0;
 const Estado_1 = require("./Estado");
 const Transicion_1 = require("./Transicion");
 const SimbolosEspeciales_1 = require("./SimbolosEspeciales");
-const EstadosSi_1 = require("./EstadosSi");
+const CompareSets_1 = require("./CompareSets");
 const Stack_1 = require("./Stack");
 const Queue_1 = require("./Queue");
-//import * as fs from 'fs';
-//import * as path from 'path';
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 class AFN {
     constructor() {
         this.edosAFN = new Set();
@@ -305,7 +328,7 @@ class AFN {
         // Inicializamos el contador de estados
         indexSi = 0;
         // Cerradura epsilon del estado inicial
-        Sj = new EstadosSi_1.Si(indexSi++, this.cerraduraEpsilon(this.edoIni));
+        Sj = new CompareSets_1.Si(indexSi++, this.cerraduraEpsilon(this.edoIni));
         C.add(Sj);
         queueSi.enqueue(Sj); // Añadimos el estado inicial a la cola de análisis
         // Proceso principal
@@ -316,7 +339,7 @@ class AFN {
             Sj = queueSi.dequeue();
             // Recorremos cada símbolo del alfabeto
             for (const c of this.alfabeto) {
-                Sk = new EstadosSi_1.Si(indexSi, this.IrA(Sj.S, c)); // Creamos un nuevo estado Sk
+                Sk = new CompareSets_1.Si(indexSi, this.IrA(Sj.S, c)); // Creamos un nuevo estado Sk
                 if (Sk.S.size === 0) // Si el conjunto está vacío, seguimos con el siguiente símbolo
                     continue;
                 // Verificamos si el estado Sk ya existe en C
@@ -337,10 +360,10 @@ class AFN {
             //Agregamos al diccionario las transiciones del estado Sj
             AFDTrans.set(Sj.id, trans);
         }
-        /*Crear archivo JSON con las transiciones del AFD opcional ???? o afura
+        //Crear archivo JSON con las transiciones del AFD opcional ???? o afura
         const filePath = path.join(__dirname, 'afd.json');
         // Convertir el Map a un objeto plano
-        const obj: { [key: number]: number[] } = {};
+        const obj = {};
         AFDTrans.forEach((value, key) => {
             obj[key] = value;
         });
@@ -348,10 +371,11 @@ class AFN {
         fs.writeFile(filePath, jsonData, (err) => {
             if (err) {
                 console.error('Error writing file', err);
-            } else {
+            }
+            else {
                 console.log('File has been written');
             }
-        });*/
+        });
         return AFDTrans;
     }
     imprimirAFN() {

@@ -1,11 +1,11 @@
 import { Estado } from './Estado';
 import { Transicion } from './Transicion';
 import { SimbolosEspeciales } from './SimbolosEspeciales';
-import { Si } from './EstadosSi';
+import { Si } from './CompareSets';
 import { Stack } from './Stack';
 import { Queue } from './Queue';
-//import * as fs from 'fs';
-//import * as path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 
 class AFN {
@@ -400,7 +400,7 @@ class AFN {
             //Agregamos al diccionario las transiciones del estado Sj
             AFDTrans.set(Sj.id, trans);
         }
-        /*Crear archivo JSON con las transiciones del AFD opcional ???? o afura
+        //Crear archivo JSON con las transiciones del AFD opcional ???? o afura
         const filePath = path.join(__dirname, 'afd.json');
         // Convertir el Map a un objeto plano
         const obj: { [key: number]: number[] } = {};
@@ -414,7 +414,7 @@ class AFN {
             } else {
                 console.log('File has been written');
             }
-        });*/
+        });
         return AFDTrans;
     }
 

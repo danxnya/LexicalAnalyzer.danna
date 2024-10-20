@@ -3,6 +3,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ER = void 0;
 const Stack_1 = require("./Stack");
 const AFN_1 = require("./AFN");
+/*
+/   Operadores {
+/       | : Union
+/       . : Concatenacion
+/       * : Cerradura de Kleene
+/       + : Cerradura Positiva
+/       ? : Cerradura Opcional
+/       \ : Caracter para asegurar que el siguiente elemento es un caracter
+/       [ : Inicio de rango de caracteres
+/       ] : Fin de rango de caracteres
+/       - : Separador de rango de caracteres
+/       ( : Inicio de agrupacion
+/       ) : Fin de agrupacion
+/   }
+/
+/   Reglas {
+/       1. Concatenacion implicita de caracteres => ab = a.b | abcd = a.b.c.d
+/       2. Concatenacion implicita con el ultimo caracter con cerradura Kleene => ab* = a.b* | abcd* = a.b.c.d*
+/       3. Concatenacion implicita con el ultimo caracter con cerradura positiva => ab+ = a.b+ | abcd+ = a.b.c.d+
+/       4. Concatenacion implicita con el ultimo caracter con cerradura opcional => ab? = a.b? | abcd? = a.b.c.d?
+/       5. Rango de caracteres => [a-z] = a|b|c|...|z
+/       6. El rango de caracteres se considera una literal => D = [0-9]
+/       7. Caracteres especiales => | . * + ? ( ) [ ] \
+/       8. Prioridad de operadores => | > . > * = + = ?
+/   }
+/
+*/
 class ER {
     constructor(expression) {
         this.postFix = "";

@@ -22,3 +22,6 @@ Posible problema: Al usar el método `transicion` se debe dejar como indefinida 
 
 ## 6. Analizador léxico
 
+
+
+## 7. Verificar SimbolosEspeciales, omitir y fin

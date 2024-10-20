@@ -21,5 +21,8 @@ class Stack {
     size() {
         return this.storage.length;
     }
+    clear() {
+        this.storage = [];
+    }
 }
 exports.Stack = Stack;

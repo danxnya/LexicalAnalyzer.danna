@@ -65,7 +65,7 @@ function main() {
     C.add(new ER_1.ER('\\(').generateAFN());
     C.add(new ER_1.ER('\\)').generateAFN());
     C.add(new ER_1.ER(' +').generateAFN());
-    C.add(new ER_1.ER('[0-9]+.(\\..+[0sd-9]+)?').generateAFN());
+    C.add(new ER_1.ER('[0-9]+.(\\..+[0-9]+)?').generateAFN());
     let NewRes = new AFN_1.AFN().UnirER(C);
     const AFD = NewRes.ToAFD();
     for (let i of AFD.keys()) {

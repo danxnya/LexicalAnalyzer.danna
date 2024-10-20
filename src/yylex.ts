@@ -1,97 +1,127 @@
 import { SimbolosEspeciales } from './SimbolosEspeciales';
+import { Stack } from './Stack';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as readline from 'readline';
 
-export class AnalizadorLexico {
-    EdoAceptacion: boolean;
-    iniLexema: number;
-    finLexema: number;
-    caracterActual: number;
-    afd: string[][];
-    lexema: string;
-    sigma: string;
-    tamString: number;
-    indicesDeCaracteres: number[]; // Definido para un Stack de enteros
+const tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, 'afd.json'), 'utf-8'));
 
-    constructor(afd: string[][], sigma: string) {
-        this.EdoAceptacion = false;
-        this.iniLexema = 0;
-        this.finLexema = 0;
-        this.lexema = '';
-        this.sigma = sigma;
-        this.afd = afd;
-        this.caracterActual = 0;
-        this.tamString = sigma.length;
-        this.indicesDeCaracteres = [];
-    }
+let CadenaSigma: string = "";  // Inicializa la cadena sigma como una cadena vacía
+let PasoPorEdoAcept: boolean = false;
+let IniLexema: number = 0;
+let FinLexema: number = -1;
+let IndiceCaracterActual: number = 0;
+let token: number = -1;
+const Pila: Stack<number> = new Stack<number>();  // Instancia de la pila para manejar estados
 
-    public yylex(): number | string{
-        this.indicesDeCaracteres.push(this.caracterActual);
-        if (this.caracterActual >= this.sigma.length) {
-            this.lexema = '';
-            return SimbolosEspeciales.FIN;
+let ultimolexema: string = "";  // Inicializa el último lexema
+
+// Implementación de SetSigma
+function SetSigma(sigma: string): void {
+    CadenaSigma = sigma;               // Asigna la cadena a procesar
+    PasoPorEdoAcept = false;           // Inicializa PasoPorEdoAcept a false
+    IniLexema = 0;                     // El índice inicial del lexema es 0
+    FinLexema = -1;                    // No se ha definido aún un final para el lexema
+    IndiceCaracterActual = 0;          // Se empieza desde el primer carácter de la cadena
+    token = -1;                        // No se ha encontrado ningún token todavía
+    Pila.clear();                      // Limpia la pila
+    ultimolexema = "";                 // Inicializa el último lexema
+}
+
+// Función principal yylex que procesa la cadena
+function yylex(): number | string {
+    const pila = new Stack<number>();  // Instancia de la pila para almacenar posiciones
+    let lexema = "";
+    const indicesDeCaracteres: number[] = [];  // Almacena los índices de caracteres procesados
+
+    // Recorremos la cadena mientras haya caracteres por analizar
+    while (true) {
+        pila.push(IndiceCaracterActual);  // Guardamos el índice actual en la pila
+        indicesDeCaracteres.push(IndiceCaracterActual);  // También guardamos el índice en el array
+
+        if (IndiceCaracterActual >= CadenaSigma.length) {
+            lexema = "FIN";  // Asignamos el lexema "FIN"
+            ultimolexema = lexema;
+            return SimbolosEspeciales.FIN;  // Si alcanzamos el final de la cadena
         }
-        this.iniLexema = this.caracterActual;
-        let estadoActual = 0;
-        this.EdoAceptacion = false;
-        this.finLexema = -1;
-        let token = SimbolosEspeciales.TOKENERROR;
-        this.lexema = '';
-        let ultimoPosicionEstadoDeAceptacionVisto = -1;
 
-        while (this.caracterActual < this.sigma.length) {
-            let transicion = parseInt(this.afd[estadoActual][this.sigma.charCodeAt(this.caracterActual)]);
-            if (transicion >= 0) {
-                estadoActual = transicion;
-                this.caracterActual++;
+        IniLexema = IndiceCaracterActual;
+        let edoActual = 0;
+        PasoPorEdoAcept = false;
+        FinLexema = -1;
+        token = -1;
 
-                if (parseInt(this.afd[estadoActual][255]) >= 0) {
-                    ultimoPosicionEstadoDeAceptacionVisto = this.caracterActual - 1;
-                    this.EdoAceptacion = true;
-                    token = parseInt(this.afd[estadoActual][255]);
+        // Procesamos cada carácter de la cadena Sigma
+        while (IndiceCaracterActual < CadenaSigma.length) {
+            const caracterActual = CadenaSigma.charCodeAt(IndiceCaracterActual);
+
+            // Obtener la transición actual a partir del autómata finito determinista (AFD)
+            const edoTransicion = tablaAFD[edoActual][caracterActual];
+
+            if (edoTransicion !== undefined && edoTransicion !== -1) {
+                // Verificamos si el estado actual es de aceptación
+                if (tablaAFD[edoTransicion][256] !== undefined && tablaAFD[edoTransicion][256] !== -1) {
+                    PasoPorEdoAcept = true;
+                    token = tablaAFD[edoTransicion][256];
+                    FinLexema = IndiceCaracterActual;
                 }
-            } else {
-                if (!this.EdoAceptacion) {
-                    this.lexema = this.sigma.charAt(this.caracterActual) + '';
-                    token = SimbolosEspeciales.TOKENERROR;
-                    this.caracterActual = this.iniLexema + 1;
-                    estadoActual = 0;
-                    return token;
-                } else {
-                    this.finLexema = ultimoPosicionEstadoDeAceptacionVisto;
-                    this.lexema = this.sigma.substring(this.iniLexema, this.finLexema + 1);
-                    this.caracterActual = this.finLexema + 1;
-                    estadoActual = 0;
-                    return token;
-                }
+
+                IndiceCaracterActual++;
+                edoActual = edoTransicion;
+                continue;  // Continuamos con la siguiente transición
             }
+
+            break;  // Si no hay transición válida, rompemos el ciclo
         }
-        if (!this.EdoAceptacion) {
-            this.lexema = this.sigma.charAt(this.caracterActual) + '';
+
+        // Si no se encontró una transición aceptable
+        if (!PasoPorEdoAcept) {
+            IndiceCaracterActual = IniLexema + 1;
+            lexema = CadenaSigma.substring(IniLexema, IniLexema + 1);
             token = SimbolosEspeciales.TOKENERROR;
-            this.caracterActual = this.iniLexema + 1;
-            estadoActual = 0;
-            return token;
-        } else {
-            this.finLexema = ultimoPosicionEstadoDeAceptacionVisto;
-            this.lexema = this.sigma.substring(this.iniLexema, this.finLexema + 1);
-            this.caracterActual = this.finLexema + 1;
-            estadoActual = 0;
-            return token;
+            ultimolexema = lexema;
+            return token;  // Devolvemos un error si no hay estado de aceptación
         }
-    }
-
-    public getLexema(): string {
-        return this.lexema;
-    }
-
-    public undoToken(): boolean {
-        if (this.indicesDeCaracteres.length === 0) return false;
-        this.caracterActual = this.indicesDeCaracteres.pop()!;
-        return true;
-    }
-
-    public printIndices(): void {
-        this.indicesDeCaracteres.forEach(i => {
-            console.log(i);
-        });
+        else {
+            // Si hubo una transición aceptable, construimos el lexema
+            lexema = CadenaSigma.substring(IniLexema, FinLexema + 1);
+            IndiceCaracterActual = FinLexema + 1;
+            ultimolexema = lexema;
+            // Si el token es de tipo OMITIR, continuamos analizando la cadena
+            if (token === SimbolosEspeciales.OMITIR) 
+                continue;
+            else 
+                return token;  // Retornamos el token identificado
+        }
     }
 }
+
+// Función para leer un archivo y procesarlo línea por línea con yylex
+function LineaPorLinea(filename: string): void {
+    const filePath = path.join(__dirname, filename);
+
+    const rl = readline.createInterface({
+        input: fs.createReadStream(filePath),
+        output: process.stdout,
+        terminal: false,
+    });
+
+    rl.on('line', (line: string) => {
+        SetSigma(line);  // Procesar cada línea
+        let result;
+        do {
+            result = yylex();
+            console.log(`${ultimolexema},${result}`);  // Imprimir lexema y token separados por coma
+        } while (result !== SimbolosEspeciales.FIN);
+    });
+
+    rl.on('close', () => { // Evento que se dispara cuando se termina de leer el archivo
+        console.log('\nFin de archivo');
+    });
+}
+
+// Ejemplo de uso: procesa un archivo llamado 'test.txt' línea por línea
+LineaPorLinea('../dump/test.txt');
+
+export { yylex, SetSigma, LineaPorLinea };
+

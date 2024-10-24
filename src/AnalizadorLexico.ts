@@ -125,9 +125,7 @@ class AnalizadorLexico {
     }
 }
 
-
-// Ejemplo de uso: procesa un archivo llamado 'test.txt' línea por línea
-const analizador = new AnalizadorLexico();
-analizador.LineaPorLinea('../dump/test.txt');
+//const analizador = new AnalizadorLexico();
+//analizador.LineaPorLinea('../dump/test.txt');
 
 export { AnalizadorLexico };

@@ -33,5 +33,5 @@ npx tsc
 ```
 Para ejecutar el analizador:
 
-[Imgur](https://imgur.com/AQJR0z1)
+[![computer-work.gif](https://i.postimg.cc/Dft6tfsS/computer-work.gif)](https://postimg.cc/6TfCZXMK)
 

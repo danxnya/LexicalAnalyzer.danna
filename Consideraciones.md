@@ -25,3 +25,5 @@ Posible problema: Al usar el método `transicion` se debe dejar como indefinida 
 
 
 ## 7. Verificar SimbolosEspeciales, omitir y fin
+#### lilberia
+npm install --save-dev @types/node

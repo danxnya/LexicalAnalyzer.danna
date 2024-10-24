@@ -1,9 +1,9 @@
 import { Estado } from './Estado';
 import { Transicion } from './Transicion';
 import { SimbolosEspeciales } from './SimbolosEspeciales';
-import { Si } from './CompareSets';
-import { Stack } from './Stack';
-import { Queue } from './Queue';
+import { Si } from './tools/CompareSets';
+import { Stack } from './tools/Stack';
+import { Queue } from './tools/Queue';
 import * as fs from 'fs';
 import * as path from 'path';
 

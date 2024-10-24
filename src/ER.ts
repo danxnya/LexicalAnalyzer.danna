@@ -1,4 +1,4 @@
-import { Stack } from './Stack';
+import { Stack } from './tools/Stack';
 import { AFN } from './AFN';
 /*
 /   Operadores {

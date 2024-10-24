@@ -27,9 +27,9 @@ exports.AFN = void 0;
 const Estado_1 = require("./Estado");
 const Transicion_1 = require("./Transicion");
 const SimbolosEspeciales_1 = require("./SimbolosEspeciales");
-const CompareSets_1 = require("./CompareSets");
-const Stack_1 = require("./Stack");
-const Queue_1 = require("./Queue");
+const CompareSets_1 = require("./tools/CompareSets");
+const Stack_1 = require("./tools/Stack");
+const Queue_1 = require("./tools/Queue");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 class AFN {

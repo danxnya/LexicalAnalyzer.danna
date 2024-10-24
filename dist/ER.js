@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ER = void 0;
-const Stack_1 = require("./Stack");
+const Stack_1 = require("./tools/Stack");
 const AFN_1 = require("./AFN");
 /*
 /   Operadores {

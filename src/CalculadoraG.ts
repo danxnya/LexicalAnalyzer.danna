@@ -38,78 +38,78 @@ let acumulador: number = 0;
 
 // Funcion para la regla E, que maneja la suma y resta
 function E(resultado: { val: number }): boolean {
-    console.log("Regla E: Ejecutando T()");
+    //console.log("Regla E: Ejecutando T()");
     const temp = { val: 0 };
     if (T(temp)) {
         resultado.val = temp.val;  // Guardamos el valor de T
-        console.log("Regla E: T() es verdadero, ejecutando Ep()");
+        //console.log("Regla E: T() es verdadero, ejecutando Ep()");
         return Ep(resultado);
     }
-    console.log("Regla E: T() es falso");
+    //console.log("Regla E: T() es falso");
     return false;
 }
 
 // Funcion para la regla E', que maneja las operaciones de + y -
 function Ep(resultado: { val: number }): boolean {
     const token = AL.yylex();
-    console.log(`Regla E': Token recibido: ${token}`);
+    //console.log(`Regla E': Token recibido: ${token}`);
     const temp = { val: 0 };
 
     if (token === TOKEN.PLUS) {
-        console.log("Regla E': Token es '+', ejecutando T() y luego Ep()");
+        //console.log("Regla E': Token es '+', ejecutando T() y luego Ep()");
         if (T(temp)) {
             resultado.val += temp.val;  // Acumula el valor
             return Ep(resultado);
         }
         return false;
     } else if (token === TOKEN.MINUS) {
-        console.log("Regla E': Token es '-', ejecutando T() y luego Ep()");
+        //console.log("Regla E': Token es '-', ejecutando T() y luego Ep()");
         if (T(temp)) {
             resultado.val -= temp.val;  // Resta el valor
             return Ep(resultado);
         }
         return false;
     }
-    console.log("Regla E': No es '+' ni '-', se devuelve el token");
+    //console.log("Regla E': No es '+' ni '-', se devuelve el token");
     AL.undoToken();  // Devuelve el token si no corresponde a la regla actual
     return true;
 }
 
 // Funcion para la regla T, que maneja la multiplicación y división
 function T(resultado: { val: number }): boolean {
-    console.log("Regla T: Ejecutando F()");
+    //console.log("Regla T: Ejecutando F()");
     const temp = { val: 0 };
     if (F(temp)) {
         resultado.val = temp.val;  // Guardamos el valor de F
-        console.log("Regla T: F() es verdadero, ejecutando Tp()");
+        //console.log("Regla T: F() es verdadero, ejecutando Tp()");
         return Tp(resultado);
     }
-    console.log("Regla T: F() es falso");
+    //console.log("Regla T: F() es falso");
     return false;
 }
 
 // Funcion para la regla Tp, que maneja * y /
 function Tp(resultado: { val: number }): boolean {
     const token = AL.yylex();
-    console.log(`Regla Tp: Token recibido: ${token}`);
+    //console.log(`Regla Tp: Token recibido: ${token}`);
     const temp = { val: 0 };
 
     if (token === TOKEN.PROD) {
-        console.log("Regla Tp: Token es '*', ejecutando F() y luego Tp()");
+        //console.log("Regla Tp: Token es '*', ejecutando F() y luego Tp()");
         if (F(temp)) {
             resultado.val *= temp.val;  // Multiplica el valor
             return Tp(resultado);
         }
         return false;
     } else if (token === TOKEN.DIV) {
-        console.log("Regla Tp: Token es '/', ejecutando F() y luego Tp()");
+        //console.log("Regla Tp: Token es '/', ejecutando F() y luego Tp()");
         if (F(temp)) {
             resultado.val /= temp.val;  // Divide el valor
             return Tp(resultado);
         }
         return false;
     }
-    console.log("Regla Tp: No es '*' ni '/', se devuelve el token");
+    //console.log("Regla Tp: No es '*' ni '/', se devuelve el token");
     AL.undoToken();  // Devuelve el token si no corresponde a la regla actual
     return true;
 }
@@ -117,29 +117,29 @@ function Tp(resultado: { val: number }): boolean {
 // Funcion para la regla F, que maneja los números y paréntesis
 function F(resultado: { val: number }): boolean {
     const token = AL.yylex();
-    console.log(`Regla F: Token recibido: ${token}`);
+    //console.log(`Regla F: Token recibido: ${token}`);
 
     if (token === TOKEN.LPAREN) {
-        console.log("Regla F: Token es '(', ejecutando E()");
+        //console.log("Regla F: Token es '(', ejecutando E()");
         if (E(resultado)) {
-            console.log("Regla F: E() es verdadero, buscando ')'");
+            //console.log("Regla F: E() es verdadero, buscando ')'");
             return AL.yylex() === TOKEN.RPAREN;
         }
-        console.log("Regla F: E() es falso");
+        //console.log("Regla F: E() es falso");
         return false;
     } else if (token === TOKEN.NUM) {
         resultado.val = parseFloat(AL.getLexema());  // Convertimos el token a número
-        console.log(`Regla F: Token es 'num' con valor ${resultado.val}`);
+        //console.log(`Regla F: Token es 'num' con valor ${resultado.val}`);
         return true;
     }
-    console.log("Regla F: Token no es '(' ni 'num', devolviendo token");
+    //console.log("Regla F: Token no es '(' ni 'num', devolviendo token");
     AL.undoToken();  // Devuelve el token si no es un número o paréntesis
     return false;
 }
 
 // Modificar la función parse para retornar el valor de la expresión
 function parse(input: string): { valid: boolean, value: number } {
-    console.log(`Parseando la entrada: "${input}"`);
+    //console.log(`Parseando la entrada: "${input}"`);
     AL.SetSigma(input);
     const resultado = { val: 0 };
     const valido = E(resultado) && AL.yylex() === TOKEN.END;

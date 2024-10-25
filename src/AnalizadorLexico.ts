@@ -100,6 +100,7 @@ class AnalizadorLexico {
         return false;
     }
 
+
     // Función para leer un archivo y procesarlo línea por línea con yylex
     public LineaPorLinea(filename: string): void {
         const filePath = path.join(__dirname, filename);

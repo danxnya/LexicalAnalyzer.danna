@@ -82,7 +82,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ afn }) => {
     });
 
     const simulation = d3.forceSimulation(nodesArray)
-      .force('link', d3.forceLink(links).id((d: any) => d.id).distance(150))
+      .force('link', d3.forceLink(links).id((d: any) => d.id).distance(100))
       .force('charge', d3.forceManyBody().strength(-200))
       .force('center', d3.forceCenter(width / 2, height / 2));
 
@@ -111,7 +111,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ afn }) => {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,0 L0,10 L10,5 Z') // Forma de la flecha
-      .attr('fill', '#999'); // Color de la flecha
+      .attr('fill', '#1A1A1A'); // Color de la flecha
 
     // Agregar etiquetas a los enlaces
     const linkLabels = svg.append('g')
@@ -123,7 +123,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ afn }) => {
       .text(d => d.label)
       .attr('font-size', '18px')
       .attr('text-anchor', 'middle')
-      .attr('fill', '#ffffff');
+      .attr('fill', '#1A1A1A');
 
     const node = svg.append('g')
       .attr('class', 'nodes')
@@ -132,7 +132,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ afn }) => {
       .enter()
       .append('circle')
       .attr('r', d => d.type === 'inicial' ? 20 : (d.type === 'final' ? 20 : 15)) // Cambiar el radio según el tipo
-      .attr('fill', d => d.type === 'inicial' ? '#58706d' : (d.type === 'final' ? '#e3e3d1' : '#7c8a6e')) // Cambiar el color según el tipo
+      .attr('fill', d => d.type === 'inicial' ? '#907aa9' : (d.type === 'final' ? '#56949f' : '#b4637a')) // Cambiar el color según el tipo
       .call(d3.drag<any, Node>()
         .on('start', dragStarted)
         .on('drag', dragged)

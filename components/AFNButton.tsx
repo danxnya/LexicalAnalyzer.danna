@@ -4,11 +4,14 @@
 import * as React from "react";
 import { Button, Modal, Typography, Box, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { createTheme } from "@mui/material/styles";
 import { BorderBeam } from "@/components/magic-ui/border-beam";
+import PulsatingButton from "@/components/magic-ui/pulsating-button";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
 
+// Estilos modal
 const style = {
     position: 'absolute',
     top: '50%',
@@ -16,14 +19,45 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 500,
     heigth: 600,
-    bgcolor: '#333',
-    color: 'fff',
-    border: '2px solid #000',
+    bgcolor: '#FFFFFF',
+    color: 'black',
+    border: '3px solid #B3B3B3',
     boxShadow: 24,
     p: 4,
 };
 
+// Tema morado
+declare module '@mui/material/styles' {
+    interface Palette {
+        purple: Palette['primary'];
+    }
+    interface PaletteOptions {
+        purple: PaletteOptions['primary'];
+    }
+}
+
+// Actualizamos el TextField para que sea morado
+declare module '@mui/material/TextField' {
+    interface TextFieldPropsColorOverrides {
+        purple: true;
+    }
+}
+
+const theme = createTheme({
+    palette: {
+        purple: {
+            main: "#907aa9",
+            light: "#907aa9",
+            dark: "#907aa9",
+            contrastText: "#907aa9",
+        },
+    },
+});
+
 const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated }) => {
+    // Contador AFN local
+    const [hasAFN, setHasAFN] = React.useState(false);
+
     // Estados para el Modal
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -58,54 +92,67 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
         }
 
         onAFNCreated(afn);
+        setHasAFN(true);
+
         // Reinciar los inputs
         setInput1('');
         setInput2('');
 
         // Cerramos el modal
         handleClose();
-    }; 
+    };
+
+    // Deshabilitar pulso si ya hay un AFN
+    const duration = hasAFN ? "0s" : "5s";
 
     return(
-        <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-lg border-black bg-background-black md:shadow-xl">
-                <Button 
-                    sx={{ backgroundColor: "black" }}
-                    variant="contained"
-                    startIcon={<Add />}
-                    onClick={handleOpen}>
+        <div>
+            <PulsatingButton
+                className="bg-custom1 text-custom1"
+                pulseColor="#B3B3B3"
+                duration={duration}
+                onClick={handleOpen}
+            >
+                <Add /> Crear AFN
+            </PulsatingButton>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
                         Crear AFN
-                </Button>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Ingresa un número o simbolo para crear el AFN
+                    </Typography>
+                    <TextField
+                        label="Número o simbolo 1"
+                        value={input1}
+                        onChange={handleInput1Change}
+                        fullWidth
+                        color="purple"
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Número o simbolo 2"
+                        value={input2}
+                        onChange={handleInput2Change}
+                        fullWidth
+                        color="purple"
+                        margin="normal"
+                    />
+                    <Button 
+                        variant="contained"
+                        sx={{ backgroundColor: "#907aa9", padding: "8px 24px", mt: 1 }}
+                        endIcon={<Add />}
+                        onClick={handleCreateAFN}>
                             Crear AFN
-                        </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Ingresa un número o simbolo para crear el AFN
-                        </Typography>
-                        <TextField
-                            label="Número o simbolo 1"
-                            value={input1}
-                            onChange={handleInput1Change}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Número o simbolo 2"
-                            value={input2}
-                            onChange={handleInput2Change}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <Button variant="contained" onClick={handleCreateAFN}>Crear</Button>
-                    </Box>
-                </Modal>
-                <BorderBeam size={100} duration={8} delay={9} borderWidth={1.2} colorFrom='#8839ef' colorTo='#04a5e5'/>
+                    </Button>
+                </Box>
+            </Modal>
         </div>
     );
 };

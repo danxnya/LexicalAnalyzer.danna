@@ -3,7 +3,7 @@
 // Importamos los componentes necesarios de React, Material UI y MagicUI
 import * as React from "react";
 import { Button, Modal, Typography, Box, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
-import { Transform } from "@mui/icons-material";
+import { Clear } from "@mui/icons-material";
 import { style } from "@/components/Theme"
 import ShinyButton from "@/components/magic-ui/shiny-button";
 
@@ -17,12 +17,12 @@ declare module '@mui/material/FormControl' {
     }
 }
 
-interface AFNtoAFDButtonProps {
+interface DeleteAFNButtonProps {
     afns: AFN[];
-    onAFNtoAFD: (newAFN : AFN) => void;
+    onDeleteAFN: (newAFN : AFN) => void;
 }
 
-const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) => {
+const DeleteAFNButton : React.FC<DeleteAFNButtonProps> = ({ afns, onDeleteAFN }) => {
     // Estados para el Modal
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -38,8 +38,8 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
     const handleAFNtoAFD = () => {
         const selectedAFN = afns.find(afn => afn.idAFN.toString() === afn1);
         if(selectedAFN) {
-            selectedAFN.ToAFD();
-            onAFNtoAFD(selectedAFN);
+            selectedAFN.borrarAFD();
+            onDeleteAFN(selectedAFN);
         }
         handleClose();
     };
@@ -56,10 +56,10 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
                         }
                     }}
                     variant="contained"
-                    startIcon={<Transform />}
+                    startIcon={<Clear />}
                     onClick={handleOpen}
                     disabled={afns.length < 2}>
-                        Convertir a AFD
+                        Borrar AFN
                 </Button>
                 ) : (     
                 <div onClick={handleOpen} className="disabled">
@@ -67,7 +67,7 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
                         className="bg-custom1 text-custom1"
                     >
                         <span className="text-custom1">
-                            <Transform /> Convertir a AFD
+                            <Clear /> Borrar AFN
                         </span>
                     </ShinyButton>
                 </div>
@@ -81,13 +81,13 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Convertir AFD a AFN
+                        Borrar AFN
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Selecciona el AFN a convertir
+                        Selecciona el AFN a borrar
                     </Typography>
                     <FormControl sx={{ mt: 1, minWidth: 120 }} size="small" color="purple">
-                        <InputLabel id="afn1-select-label">AFN 1</InputLabel>
+                        <InputLabel id="afn1-select-label">AFN</InputLabel>
                         <Select
                             labelId="afn1-select-label"
                             id="afn-select"
@@ -106,10 +106,10 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
                         <Button
                             variant="contained"
                             className="bg-custom1 py-2 px-6"
-                            endIcon={<Transform />}
+                            endIcon={<Clear />}
                             onClick={handleAFNtoAFD}
                         >
-                            Convertir
+                            Borrar
                         </Button>
                     </Box>
                 </Box>
@@ -118,5 +118,5 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
     );
 }
 
-export default AFNtoAFDButton;
+export default DeleteAFNButton;
 

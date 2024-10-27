@@ -3,24 +3,18 @@
 import * as React from "react";
 import { Button, Modal, Typography, Box, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
 import { JoinFull } from "@mui/icons-material";
-import ShineBorder from "@/components/magic-ui/shine-border";
+import ShinyButton from "@/components/magic-ui/shiny-button";
+import { style } from "@/components/Theme"
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    heigth: 600,
-    bgcolor: '#333',
-    color: 'fff',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
+// Actualizamos el TextField para que sea morado
+declare module '@mui/material/FormControl' {
+    interface FormControlPropsColorOverrides {
+        purple: true;
+    }
+}
 
 interface JoinAFNButtonProps {
     afns: AFN[];
@@ -59,24 +53,35 @@ const JoinAFNButton: React.FC<JoinAFNButtonProps> = ({ afns, onAFNJoined}) => {
     };
 
     return (
-        <ShineBorder
-            className={afns.length < 2 ? "disabled-shine-border border-black bg-background-black" :"border-black bg-background-black"}
-            color={afns.length < 2 ? [] : ["#58706d", "#7c8a6e", "#e3e3d1"]}
-        >
-            <Button 
-                sx={{
-                    backgroundColor: "black", 
-                    color: "white", 
-                    "&:disabled": {
-                        color: "gray"
-                    }
-                }}
-                variant="contained"
-                startIcon={<JoinFull />}
-                onClick={handleOpen}
-                disabled={afns.length < 2}>
-                    Unir AFN
-            </Button>
+        <div>
+            {/*Cambia los botones (deshabilitar)*/}
+            {afns.length < 2 ? (
+                <Button 
+                    sx={{
+                        "&:disabled": {
+                            color: "#4D4D4D",
+                            backgroundColor: "#E6E6E6"
+                        }
+                    }}
+                    variant="contained"
+                    startIcon={<JoinFull />}
+                    onClick={handleOpen}
+                    disabled={afns.length < 2}>
+                        Unir AFN
+                </Button>
+                ) : (     
+                <div onClick={handleOpen} className="disabled">
+                    <ShinyButton
+                        className="bg-custom1 text-custom1"
+                    >
+                        <span className="text-custom1">
+                            <JoinFull /> Unir AFN
+                        </span>
+                    </ShinyButton>
+                </div>
+                )
+            }
+
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -84,48 +89,57 @@ const JoinAFNButton: React.FC<JoinAFNButtonProps> = ({ afns, onAFNJoined}) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Unir AFN
-                        </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Selecciona los dos AFN que deseas unir
-                        </Typography>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                            <InputLabel id="afn1-select-label">AFN 1</InputLabel>
-                            <Select
-                                labelId="afn1-select-label"
-                                id="afn-select"
-                                value={afn1}
-                                label="AFN 1"
-                                onChange={handleAFN1Change}
-                            >
-                                {afns.map((afn) => (
-                                    <MenuItem key={afn.idAFN} value={afn.idAFN.toString()}>
-                                        AFN {afn.idAFN}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                            <InputLabel id="afn2-select-label">AFN 2</InputLabel>
-                            <Select
-                                labelId="afn2-select-label"
-                                id="afn-select"
-                                value={afn2}
-                                label="AFN 2"
-                                onChange={handleAFN2Change}
-                            >
-                                {afns.map((afn) => (
-                                    <MenuItem key={afn.idAFN} value={afn.idAFN.toString()}>
-                                        AFN {afn.idAFN}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    <Button variant="contained" onClick={handleJoinAFN}>Unir</Button>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Unir AFN
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Selecciona los dos AFN que deseas unir
+                    </Typography>
+                    <FormControl sx={{ mt: 2, minWidth: 120 }} size="small" color="purple">
+                        <InputLabel id="afn1-select-label">AFN 1</InputLabel>
+                        <Select
+                            labelId="afn1-select-label"
+                            id="afn-select"
+                            value={afn1}
+                            label="AFN 1"
+                            onChange={handleAFN1Change}
+                        >
+                            {afns.map((afn) => (
+                                <MenuItem key={afn.idAFN} value={afn.idAFN.toString()}>
+                                    AFN {afn.idAFN}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ m: 2, ml: 2, minWidth: 120 }} size="small" color="purple">
+                        <InputLabel id="afn2-select-label">AFN 2</InputLabel>
+                        <Select
+                            labelId="afn2-select-label"
+                            id="afn-select"
+                            value={afn2}
+                            label="AFN 2"
+                            onChange={handleAFN2Change}
+                        >
+                            {afns.map((afn) => (
+                                <MenuItem key={afn.idAFN} value={afn.idAFN.toString()}>
+                                    AFN {afn.idAFN}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <Box>
+                        <Button 
+                            variant="contained"
+                            className="bg-custom1 py-2 px-6"
+                            endIcon={<JoinFull />}
+                            onClick={handleJoinAFN}
+                        >
+                            Unir
+                        </Button>
+                    </Box>
                 </Box>
             </Modal>
-        </ShineBorder>
+        </div>
     );
 }
 

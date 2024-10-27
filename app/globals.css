@@ -2,10 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --100: #FFFFFF;
+  --200: #E6E6E6;
+  --300: #CCCCCC;
+  --400: #B3B3B3;
+  --500: #999999;
+  --600: #808080;
+  --700: #666666;
+  --800: #4D4D4D;
+  --900: #333333;
+  --950: #1A1A1A;
+  --1000: #000000;
+}
+
+.bg-custom1{
+  background-color: var(--1000);
+}
+
+.text-custom1{
+  color: var(--100);
+  text-align: center;
+}
+
+.text-afn{
+  color: var(--900)
+}
+
+.bg-afn{
+  background-color: var(--200);
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: white;
-  background-color: black;
+  background-color: var(--100);
 }
 
 @layer utilities {

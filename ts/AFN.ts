@@ -4,8 +4,8 @@ import { SimbolosEspeciales } from './SimbolosEspeciales';
 import { Si } from './EstadosSi';
 import { Stack } from './Stack';
 import { Queue } from './Queue';
-// import * as fs from 'fs';
-// import * as path from 'path';
+import path from 'path';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 
 class AFN {
@@ -122,10 +122,7 @@ class AFN {
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
 
         // Limpiar unido
-        f2.edoIni = undefined;
-        f2.edosAFN.clear();
-        f2.edosAcept.clear();
-        f2.alfabeto.clear();
+        f2.borrarAFD();
 
         // Impresiones para verificar el funcionamiento
         /*
@@ -152,10 +149,7 @@ class AFN {
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
 
         // Limpiar unido
-        f2.edoIni = undefined;
-        f2.edosAFN.clear();
-        f2.edosAcept.clear();
-        f2.alfabeto.clear();
+        f2.borrarAFD();
 
         /*// Impresiones para verificar el funcionamiento
         console.log(`\x1b[1m\x1b[31mConcatenación de ${this.idAFN} y ${f2.idAFN}: OK\x1b[0m`);
@@ -408,6 +402,7 @@ class AFN {
                     trans[c.charCodeAt(0)] = existe.id;
                 }
             }
+
             //Agrgamos token al arreglo de transiciones
             const edoAcept = [...Sj.S].find(x => x.GetEdoAcept);
             trans[256] = (edoAcept !== undefined) ? edoAcept.GetToken : -1;
@@ -416,9 +411,6 @@ class AFN {
             AFDTrans.set(Sj.id, trans);
         }
 
-        /*Crear archivo JSON con las transiciones del AFD opcional ???? o afura
-        const filePath = path.join(__dirname, 'afd.json');
-
         // Convertir el Map a un objeto plano
         const obj: { [key: number]: number[] } = {};
         AFDTrans.forEach((value, key) => {
@@ -426,17 +418,29 @@ class AFN {
         });
 
         const jsonData = JSON.stringify(obj);
-        fs.writeFile(filePath, jsonData, (err) => {
-            if (err) {
-                console.error('Error writing file', err);
-            } else {
-                console.log('File has been written');
-            }
-        });*/
+
+        // Crear un Blob y descargar el archivo JSON en el navegador
+        const blob = new Blob([jsonData], { type: 'aplication/json' });
+        const url = URL.createObjectURL(blob);
+
+        // Crear el enlace de descarga
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'AFD.json';
+        link.click();
+
+        // Liberar la URL creada
+        URL.revokeObjectURL(url);
         
         return AFDTrans;
     }
 
+    borrarAFD(): void {
+        this.edoIni = undefined;
+        this.edosAFN.clear();
+        this.edosAcept.clear();
+        this.alfabeto.clear();
+    }
 
     imprimirAFN(): void {
         console.log(`\n\x1b[1m\x1b[31mAFN ${this.idAFN}\x1b[0m`);

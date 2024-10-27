@@ -3,27 +3,19 @@
 // Importamos los componentes necesarios de React, Material UI y MagicUI
 import * as React from "react";
 import { Button, Modal, Typography, Box, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
-import { ControlPoint } from "@mui/icons-material";
-import ShineBorder from "@/components/magic-ui/shine-border";
-
+import { ControlPoint} from "@mui/icons-material";
+import { style } from "@/components/Theme";
+import ShinyButton from "@/components/magic-ui/shiny-button";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
 
-// Estilos modal
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    heigth: 600,
-    bgcolor: '#333',
-    color: 'fff',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
+// Actualizamos el TextField para que sea morado
+declare module '@mui/material/FormControl' {
+    interface FormControlPropsColorOverrides {
+        purple: true;
+    }
+}
 
 interface CerraduraPositivaAFNButtonProps {
     afns: AFN[];
@@ -53,24 +45,34 @@ const CerraduraPositivaAFNButton : React.FC<CerraduraPositivaAFNButtonProps> = (
     };
 
     return(
-        <ShineBorder
-            className={afns.length < 2 ? "disabled-shine-border border-black bg-background-black" :"border-black bg-background-black"}
-            color={afns.length < 2 ? [] : ["#58706d", "#7c8a6e", "#e3e3d1"]}
-        >
-            <Button 
-                sx={{
-                    backgroundColor: "black", 
-                    color: "white", 
-                    "&:disabled": {
-                        color: "gray"
-                    }
-                }}
-                variant="contained"
-                startIcon={<ControlPoint />}
-                onClick={handleOpen}
-                disabled={afns.length < 1}>
-                    Cerradura Positiva
-            </Button>
+        <div>
+            {/*Cambia los botones (deshabilitar)*/}
+            {afns.length < 1 ? (
+                <Button 
+                    sx={{
+                        "&:disabled": {
+                            color: "#4D4D4D",
+                            backgroundColor: "#E6E6E6"
+                        }
+                    }}
+                    variant="contained"
+                    startIcon={<ControlPoint />}
+                    onClick={handleOpen}
+                    disabled={afns.length < 2}>
+                        Concatenar AFN
+                </Button>
+                ) : (     
+                <div onClick={handleOpen} className="disabled">
+                    <ShinyButton
+                        className="bg-custom1 text-custom1"
+                    >
+                        <span className="text-custom1">
+                            <ControlPoint /> Cerradura Positiva
+                        </span>
+                    </ShinyButton>
+                </div>
+                )
+            }
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -79,12 +81,12 @@ const CerraduraPositivaAFNButton : React.FC<CerraduraPositivaAFNButtonProps> = (
             >
                 <Box sx={style}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Unir AFN
+                            Cerradura Positiva
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Selecciona los dos AFN que deseas unir
+                            Selecciona el AFN al que se le aplicará la cerradura positiva
                         </Typography>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <FormControl sx={{ mt: 2, minWidth: 120 }} size="small" color="purple">
                             <InputLabel id="afn1-select-label">AFN 1</InputLabel>
                             <Select
                                 labelId="afn1-select-label"
@@ -100,10 +102,19 @@ const CerraduraPositivaAFNButton : React.FC<CerraduraPositivaAFNButtonProps> = (
                                 ))}
                             </Select>
                         </FormControl>
-                    <Button variant="contained" onClick={handleCerraduraPositivaAFN}>Unir</Button>
+                    <Box sx={{ mt: 2 }}>
+                        <Button
+                            variant="contained"
+                            className="bg-custom1 py-2 px-4"
+                            endIcon={<ControlPoint />}
+                            onClick={handleCerraduraPositivaAFN}
+                        >
+                            Realizar cerradura
+                        </Button>
+                    </Box>
                 </Box>
             </Modal>
-        </ShineBorder>
+        </div>
     );
 }
 

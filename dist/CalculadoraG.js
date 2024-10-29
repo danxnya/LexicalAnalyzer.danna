@@ -1,6 +1,30 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const AnalizadorLexico_1 = require("./AnalizadorLexico");
+const fs = __importStar(require("fs"));
 /*
 Definimos las funciones booleanas para la gramatica de operaciones aritmeticas
 
@@ -9,19 +33,8 @@ E' => +TE' | -TE' | ε
 T => FT'
 T' => *FT' | /FT' | ε
 F => (E) | num
-
-Token asignado a cada simbolo:
-    +       -> 10
-    -       -> 20
-    *       -> 30
-    /       -> 40
-    (       -> 50
-    )       -> 60
-    space   -> 70
-    num     -> 80
-    end     -> 0 ó ascii 0
 */
-const AL = new AnalizadorLexico_1.AnalizadorLexico();
+// Token asignado a cada simbolo
 var TOKEN;
 (function (TOKEN) {
     TOKEN[TOKEN["PLUS"] = 10] = "PLUS";
@@ -34,132 +47,153 @@ var TOKEN;
     TOKEN[TOKEN["NUM"] = 80] = "NUM";
     TOKEN[TOKEN["END"] = 0] = "END";
 })(TOKEN || (TOKEN = {}));
-let acumulador = 0;
-// Funcion para la regla E, que maneja la suma y resta
+const AL = new AnalizadorLexico_1.AnalizadorLexico();
+// Funciones para la gramática
 function E(resultado) {
-    //console.log("Regla E: Ejecutando T()");
+    var _a, _b;
     const temp = { val: 0 };
-    if (T(temp)) {
-        resultado.val = temp.val; // Guardamos el valor de T
-        //console.log("Regla E: T() es verdadero, ejecutando Ep()");
-        return Ep(resultado);
+    const tree = { name: "E", children: [] };
+    const tResult = T(temp);
+    if (tResult.val) {
+        resultado.val = temp.val;
+        (_a = tree.children) === null || _a === void 0 ? void 0 : _a.push(tResult.tree);
+        const epResult = Ep(resultado);
+        if (epResult.val) {
+            (_b = tree.children) === null || _b === void 0 ? void 0 : _b.push(epResult.tree);
+        }
+        return { val: true, tree: tree };
     }
-    //console.log("Regla E: T() es falso");
-    return false;
+    return { val: false, tree: tree };
 }
-// Funcion para la regla E', que maneja las operaciones de + y -
 function Ep(resultado) {
+    var _a, _b;
     const token = AL.yylex();
-    //console.log(`Regla E': Token recibido: ${token}`);
+    const tree = { name: "E'", children: [] };
     const temp = { val: 0 };
-    if (token === TOKEN.PLUS) {
-        //console.log("Regla E': Token es '+', ejecutando T() y luego Ep()");
-        if (T(temp)) {
-            resultado.val += temp.val; // Acumula el valor
-            return Ep(resultado);
+    if (token === TOKEN.PLUS || token === TOKEN.MINUS) {
+        const tResult = T(temp);
+        if (tResult.val) {
+            resultado.val += (token === TOKEN.PLUS ? temp.val : -temp.val);
+            (_a = tree.children) === null || _a === void 0 ? void 0 : _a.push({ name: token === TOKEN.PLUS ? "+" : "-" }, tResult.tree);
+            const epResult = Ep(resultado);
+            if (epResult.val) {
+                (_b = tree.children) === null || _b === void 0 ? void 0 : _b.push(epResult.tree);
+            }
+            return { val: true, tree: tree };
         }
-        return false;
+        return { val: false, tree: tree };
     }
-    else if (token === TOKEN.MINUS) {
-        //console.log("Regla E': Token es '-', ejecutando T() y luego Ep()");
-        if (T(temp)) {
-            resultado.val -= temp.val; // Resta el valor
-            return Ep(resultado);
-        }
-        return false;
-    }
-    //console.log("Regla E': No es '+' ni '-', se devuelve el token");
-    AL.undoToken(); // Devuelve el token si no corresponde a la regla actual
-    return true;
+    AL.undoToken();
+    return { val: true, tree: tree };
 }
-// Funcion para la regla T, que maneja la multiplicación y división
 function T(resultado) {
-    //console.log("Regla T: Ejecutando F()");
+    var _a, _b;
     const temp = { val: 0 };
-    if (F(temp)) {
-        resultado.val = temp.val; // Guardamos el valor de F
-        //console.log("Regla T: F() es verdadero, ejecutando Tp()");
-        return Tp(resultado);
+    const tree = { name: "T", children: [] };
+    const fResult = F(temp);
+    if (fResult.val) {
+        resultado.val = temp.val;
+        (_a = tree.children) === null || _a === void 0 ? void 0 : _a.push(fResult.tree);
+        const tpResult = Tp(resultado);
+        if (tpResult.val) {
+            (_b = tree.children) === null || _b === void 0 ? void 0 : _b.push(tpResult.tree);
+        }
+        return { val: true, tree: tree };
     }
-    //console.log("Regla T: F() es falso");
-    return false;
+    return { val: false, tree: tree };
 }
-// Funcion para la regla Tp, que maneja * y /
 function Tp(resultado) {
+    var _a, _b;
     const token = AL.yylex();
-    //console.log(`Regla Tp: Token recibido: ${token}`);
+    const tree = { name: "T'", children: [] };
     const temp = { val: 0 };
-    if (token === TOKEN.PROD) {
-        //console.log("Regla Tp: Token es '*', ejecutando F() y luego Tp()");
-        if (F(temp)) {
-            resultado.val *= temp.val; // Multiplica el valor
-            return Tp(resultado);
+    if (token === TOKEN.PROD || token === TOKEN.DIV) {
+        const fResult = F(temp);
+        if (fResult.val) {
+            resultado.val = token === TOKEN.PROD ? resultado.val * temp.val : resultado.val / temp.val;
+            (_a = tree.children) === null || _a === void 0 ? void 0 : _a.push({ name: token === TOKEN.PROD ? "*" : "/" }, fResult.tree);
+            const tpResult = Tp(resultado);
+            if (tpResult.val) {
+                (_b = tree.children) === null || _b === void 0 ? void 0 : _b.push(tpResult.tree);
+            }
+            return { val: true, tree: tree };
         }
-        return false;
+        return { val: false, tree: tree };
     }
-    else if (token === TOKEN.DIV) {
-        //console.log("Regla Tp: Token es '/', ejecutando F() y luego Tp()");
-        if (F(temp)) {
-            resultado.val /= temp.val; // Divide el valor
-            return Tp(resultado);
-        }
-        return false;
-    }
-    //console.log("Regla Tp: No es '*' ni '/', se devuelve el token");
-    AL.undoToken(); // Devuelve el token si no corresponde a la regla actual
-    return true;
+    AL.undoToken();
+    return { val: true, tree: tree };
 }
-// Funcion para la regla F, que maneja los números y paréntesis
 function F(resultado) {
+    var _a, _b;
     const token = AL.yylex();
-    //console.log(`Regla F: Token recibido: ${token}`);
+    const tree = { name: "F", children: [] };
     if (token === TOKEN.LPAREN) {
-        //console.log("Regla F: Token es '(', ejecutando E()");
-        if (E(resultado)) {
-            //console.log("Regla F: E() es verdadero, buscando ')'");
-            return AL.yylex() === TOKEN.RPAREN;
+        const eResult = E(resultado);
+        if (eResult.val && AL.yylex() === TOKEN.RPAREN) {
+            (_a = tree.children) === null || _a === void 0 ? void 0 : _a.push({ name: "(" }, eResult.tree, { name: ")" });
+            return { val: true, tree: tree };
         }
-        //console.log("Regla F: E() es falso");
-        return false;
+        return { val: false, tree: tree };
     }
     else if (token === TOKEN.NUM) {
-        resultado.val = parseFloat(AL.getLexema()); // Convertimos el token a número
-        //console.log(`Regla F: Token es 'num' con valor ${resultado.val}`);
-        return true;
+        resultado.val = parseFloat(AL.getLexema());
+        (_b = tree.children) === null || _b === void 0 ? void 0 : _b.push({ name: "num", children: [{ name: `${resultado.val}` }] });
+        return { val: true, tree: tree };
     }
-    //console.log("Regla F: Token no es '(' ni 'num', devolviendo token");
-    AL.undoToken(); // Devuelve el token si no es un número o paréntesis
-    return false;
+    AL.undoToken();
+    return { val: false, tree: tree };
 }
-// Modificar la función parse para retornar el valor de la expresión
+// Guardar el árbol y el resultado en un archivo JSON
+// Guardar el árbol y el resultado en un archivo JSON
+function guardarArbolConResultado(tree, resultado, nombreArchivo) {
+    const nuevoArbol = { tree, resultado };
+    let data = [];
+    // Verificar si el archivo ya contiene datos
+    if (fs.existsSync(nombreArchivo)) {
+        const contenidoActual = fs.readFileSync(nombreArchivo, 'utf-8');
+        try {
+            const parsedData = JSON.parse(contenidoActual);
+            data = Array.isArray(parsedData) ? parsedData : []; // Asegura que `data` sea un arreglo
+        }
+        catch (error) {
+            console.warn(`Advertencia: contenido inválido en ${nombreArchivo}. Inicializando como arreglo vacío.`);
+            data = [];
+        }
+    }
+    // Agregar el nuevo árbol al arreglo de datos
+    data.push(nuevoArbol);
+    fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
+    console.log(`Árbol y resultado guardados en ${nombreArchivo}`);
+}
+// Parseo que incluye la generación de árbol y resultado
 function parse(input) {
-    //console.log(`Parseando la entrada: "${input}"`);
     AL.SetSigma(input);
     const resultado = { val: 0 };
-    const valido = E(resultado) && AL.yylex() === TOKEN.END;
-    return { valid: valido, value: resultado.val };
+    const eResult = E(resultado);
+    if (eResult.val && AL.yylex() === TOKEN.END) {
+        guardarArbolConResultado(eResult.tree, resultado.val, './dump/tree.json');
+        return { valid: true, tree: eResult.tree, resultado: resultado.val };
+    }
+    return { valid: false, tree: { name: "Error" }, resultado: 0 };
 }
+// Pruebas y generación del archivo JSON con árbol y resultado
 function runTests() {
     const testCases = [
-        "2+3.1",
-        "(2 + 3) * 4",
-        //"2 + 3 * 4 / 2 - 1",
-        //"2 + (3 * 4)",
-        //"2 + 3 * (4 + 5)",
-        //"2 +",  // Invalida
-        //"2 * (3 + 4))",  // Invalida
-        //"(2 + 3",  // Invalida
+        //"2+3.1",
+        //"(2 + 3) * 4",
+        //"736587287387/732856*(1)"
+        //"2 + 3 * 4",
+        "((2 + 3) * 4 - 2) / 2",
     ];
     for (const test of testCases) {
-        console.log(`\x1b[31mcadena a Validar: "${test}"\x1b[0m`);
+        console.log(`Cadena a Validar: "${test}"`);
         const resultado = parse(test);
         if (resultado.valid) {
-            console.log(`\x1b[31mCadena: Valida, Valor: ${resultado.value}\x1b[0m`);
+            console.log(`Cadena: Válida, Resultado: ${resultado.resultado}. Árbol guardado en JSON.`);
         }
         else {
-            console.log(`\x1b[31mCadena: Invalida\x1b[0m`);
+            console.log("Cadena: Inválida");
         }
-        console.log("\n\n");
     }
 }
 runTests();

@@ -40,6 +40,7 @@ class AnalizadorLexico {
         this.token = -1;
         this.Pila = new Stack_1.Stack(); // Pila para almacenar los índices
         this.ultimolexema = "";
+        this.SetSigma("");
     }
     // Implementación de SetSigma
     SetSigma(sigma) {

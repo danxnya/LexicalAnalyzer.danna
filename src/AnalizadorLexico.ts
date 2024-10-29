@@ -16,6 +16,11 @@ class AnalizadorLexico {
     private Pila: Stack<number> = new Stack<number>();  // Pila para almacenar los índices
     private ultimolexema: string = "";
 
+    constructor() {
+        this.SetSigma("");
+    }
+
+
     // Implementación de SetSigma
     public SetSigma(sigma: string): void {
         this.CadenaSigma = sigma;
@@ -126,7 +131,7 @@ class AnalizadorLexico {
     }
 }
 
-//const analizador = new AnalizadorLexico();
-//analizador.LineaPorLinea('../dump/test.txt');
+// const analizador = new AnalizadorLexico();
+// analizador.LineaPorLinea('../dump/test.txt');
 
 export { AnalizadorLexico };

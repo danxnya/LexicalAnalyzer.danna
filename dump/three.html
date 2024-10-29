@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árboles de Derivación</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-color: #11111B; 
+        }
+        .node circle {
+            fill: #c6aae8; /* Rosa pastel */
+            stroke: #a389c4;  /* Borde en un tono de rosa un poco más oscuro */
+            stroke-width: 3px;
+            opacity: 0.7;
+        }
+
+        @keyframes animateDash {
+            to {
+                stroke-dashoffset: -10;
+            }
+        }
+        .node text { 
+        }
+
+        .link {
+            fill: none;
+            stroke: #C5C5C5;
+            stroke-width: 2px;
+            opacity: 0.5;
+            stroke-dasharray: 5, 5;
+            stroke-linecap: round;
+            animation: animateDash 0.7s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const width = 1000;
+            const height = window.innerHeight;
+            const svg = d3.select('body').append('svg')
+                .attr('width', width * 2)
+                .attr('height', height)
+                .call(d3.zoom().on("zoom", function (event) {
+                    svg.attr("transform", event.transform)
+                }))
+                .append("g");
+
+            const tree = d3.tree().nodeSize([100, 100]);
+
+            // Cargar el JSON con múltiples árboles
+            d3.json('../dump/tree.json').then(data => {
+                const horizontalSpacing = 900; // Espaciado horizontal entre árboles
+
+                // Iterar sobre cada entrada en el JSON
+                data.forEach((entry, index) => {
+                    const treeData = entry.tree;
+                    const resultado = entry.resultado;
+
+                    // Crear la estructura de árbol
+                    const root = d3.hierarchy(treeData);
+                    const treeLayout = tree(root);
+                    const nodes = treeLayout.descendants();
+                    const links = treeLayout.links();
+
+                    // Crear un grupo para cada árbol y ajustar su posición horizontal
+                    const g = svg.append("g")
+                        .attr("transform", `translate(${index * horizontalSpacing}, 50)`);
+
+                    const node = g.selectAll('.node')
+                        .data(nodes)
+                        .enter().append('g')
+                        .attr('class', 'node')
+                        .attr('transform', d => `translate(${d.x},${d.y})`)
+                        .on('mouseover', function (event, d) {
+                            d3.select(this).select('circle')
+                                .transition()
+                                .duration(200)
+                                .attr('r', 20)
+                                .style('fill', '#c6aae8')
+                                .style('opacity', 1)
+                                .ease(d3.easeElasticOut.amplitude(3).period(2));
+                        })
+                        .on('mouseout', function (event, d) {
+                            d3.select(this).select('circle')
+                                .transition()
+                                .duration(200)
+                                .attr('r', 10)
+                                .style('fill', '#c6aae8')
+                                .style('opacity', 0.7)
+                                .ease(d3.easeElasticOut.amplitude(3).period(2));
+                        });
+
+                    // Dibujar los nodos
+                    node.append('circle').attr('r', 10);
+                    node.append('text')
+                        .attr('dy', '0.35em')
+                        .attr('x', 13)
+                        .attr('y', d => d.children ? -20 : 20)
+                        .text(d => d.data.name)
+                        .style('text-anchor', 'start')
+                        .style('font-weight', 'bold')
+                        .style('fill', '#C5C5C5')
+                        .style('font-family', 'Font');
+
+                    // Dibujar los enlaces
+                    g.selectAll('.link')
+                        .data(links)
+                        .enter().insert('path', 'g')
+                        .attr('class', 'link')
+                        .attr('d', d3.linkVertical().x(d => d.x).y(d => d.y));
+
+                    // Mostrar el resultado de la expresión en el centro del árbol
+                    g.append("text")
+                        .attr("x", width / 8)
+                        .attr("y", height / 2 + 50)
+                        .attr("class", "resultado")
+                        .style("fill", "#FFFFFF")
+                        .style("font-weight", "bold")
+                        .text(`Resultado: ${resultado}`);
+                });
+            }).catch(error => {
+                console.error('Error al cargar el archivo JSON:', error);
+            });
+        });
+    </script>
+</body>
+</html>

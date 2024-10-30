@@ -257,7 +257,7 @@ const data: Array<{ tree: nodo }> = [];
 function guardarArbolConResultado(tree: nodo, nombreArchivo: string) {
     const nuevoArbol = { tree };
     data.push(nuevoArbol); // Agregar el nuevo árbol al arreglo en memoria
-
+    //! Guardar el árbol en un archivo JSON en una correcta ruta y con DOM de next
     fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
     console.log(`Árbol y resultado guardados en ${nombreArchivo}`);
 }

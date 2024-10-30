@@ -39,13 +39,14 @@ class AnalizadorLexico {
         this.token = -1;
         this.Pila = new Stack_1.Stack(); // Pila para almacenar los índices
         this.ultimolexema = "";
-        sigma = sigma || "";
-        this.SetSigma("");
+        if (sigma === undefined)
+            this.SetSigma("");
+        else
+            this.SetSigma(sigma);
         this.setTablaAFD(filename);
-        //console.log(this.tablaAFD);
     }
     setTablaAFD(filename) {
-        this.SetSigma("");
+        this.SetSigma(this.CadenaSigma);
         this.tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, filename), 'utf-8'));
     }
     // Implementación de SetSigma
@@ -141,3 +142,54 @@ class AnalizadorLexico {
     }
 }
 exports.AnalizadorLexico = AnalizadorLexico;
+function test() {
+    let sigma = "A OR B & C";
+    const analizador = new AnalizadorLexico("afd.json", sigma);
+    console.log("::::::::::::::::::::::::Test 1::::::::::::::::::::::::\n\t" + sigma);
+    let token = analizador.yylex();
+    let result = "{ ";
+    while (token !== SimbolosEspeciales_1.SimbolosEspeciales.FIN) {
+        if (typeof token === 'number')
+            result += String(token) + ", ";
+        else if (typeof token === 'string') {
+            result += token + ",  ";
+        }
+        token = analizador.yylex();
+    }
+    result += String(token) + " }";
+    console.log(result);
+    //////////////////////////////////////////
+    sigma = "([0-9]+)&(.&([0-9]+))*";
+    analizador.SetSigma(sigma);
+    console.log("::::::::::::::::::::::::Test 2::::::::::::::::::::::::\n\t" + sigma);
+    token = analizador.yylex();
+    result = "{ ";
+    while (token !== SimbolosEspeciales_1.SimbolosEspeciales.FIN) {
+        if (typeof token === 'number')
+            result += String(token) + ", ";
+        else if (typeof token === 'string') {
+            result += token + ",  ";
+        }
+        token = analizador.yylex();
+    }
+    result += String(token) + " }";
+    console.log(result);
+    ///////////////////////////////////////////////
+    sigma = "\\b\\c   \\a\\";
+    analizador.SetSigma(sigma);
+    console.log("::::::::::::::::::::::::Test 3::::::::::::::::::::::::\n\t" + sigma);
+    token = analizador.yylex();
+    result = "{ ";
+    while (token !== SimbolosEspeciales_1.SimbolosEspeciales.FIN) {
+        if (typeof token === 'number')
+            result += String(token) + ", ";
+        else if (typeof token === 'string') {
+            result += token + ",  ";
+        }
+        token = analizador.yylex();
+    }
+    result += String(token) + " }";
+    console.log(result);
+    //analizador.LineaPorLinea('../dump/test.txt');*/
+}
+test();

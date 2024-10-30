@@ -42,9 +42,10 @@ class AnalizadorLexico {
         sigma = sigma || "";
         this.SetSigma("");
         this.setTablaAFD(filename);
-        console.log(this.tablaAFD);
+        //console.log(this.tablaAFD);
     }
     setTablaAFD(filename) {
+        this.SetSigma("");
         this.tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, filename), 'utf-8'));
     }
     // Implementación de SetSigma

@@ -71,17 +71,23 @@ function main() {
     }
     */
     let C: Set<AFN> = new Set<AFN>();
-    let testAFN: AFN;
+    let testAFN: AFN = new AFN();
     let testER: ER;
+    C.add(new ER('OR').generateAFN());
+    C.add(new ER('&').generateAFN());
     C.add(new ER('\\+').generateAFN());
-    C.add(new ER('-').generateAFN());
     C.add(new ER('\\*').generateAFN());
-    C.add(new ER('/').generateAFN());
+    C.add(new ER('\\?').generateAFN());
     C.add(new ER('\\(').generateAFN());
-    C.add(new ER('\\)').generateAFN());
     C.add(new ER(' +').generateAFN());
-    C.add(new ER('[0-9]+.(\\..+[0-9]+)?').generateAFN());
+    testAFN.creaAFNBasico(2);
+    C.add(new ER('\\)').generateAFN());
+    C.add(new ER('\\[').generateAFN());
+    C.add(new ER('\\]').generateAFN());
+    C.add(new ER('\\-').generateAFN());
+    C.add(new ER('([ -%]|\'|[,->]|[@-Z]|[^-■]|(\\.(&|[(-+]|\\?|[[-]])))').generateAFN());
     let NewRes: AFN = new AFN().UnirER(C);
+    //NewRes.imprimirAFN()
     const AFD: Map<Number, Array<Number>> = NewRes.ToAFD();
     for (let i of AFD.keys()) {
         console.log(`Estado ${i}:`);

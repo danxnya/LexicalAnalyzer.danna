@@ -21,7 +21,7 @@ class AnalizadorLexico {
         sigma = sigma || "";
         this.SetSigma("");
         this.setTablaAFD(filename);
-        console.log(this.tablaAFD);
+        //console.log(this.tablaAFD);
     }
     setTablaAFD(filename: string) {
         this.SetSigma("");

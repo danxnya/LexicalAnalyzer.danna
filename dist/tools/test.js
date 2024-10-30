@@ -56,17 +56,23 @@ function main() {
     }
     */
     let C = new Set();
-    let testAFN;
+    let testAFN = new AFN_1.AFN();
     let testER;
+    C.add(new ER_1.ER('OR').generateAFN());
+    C.add(new ER_1.ER('&').generateAFN());
     C.add(new ER_1.ER('\\+').generateAFN());
-    C.add(new ER_1.ER('-').generateAFN());
     C.add(new ER_1.ER('\\*').generateAFN());
-    C.add(new ER_1.ER('/').generateAFN());
+    C.add(new ER_1.ER('\\?').generateAFN());
     C.add(new ER_1.ER('\\(').generateAFN());
-    C.add(new ER_1.ER('\\)').generateAFN());
     C.add(new ER_1.ER(' +').generateAFN());
-    C.add(new ER_1.ER('[0-9]+.(\\..+[0-9]+)?').generateAFN());
+    testAFN.creaAFNBasico(2);
+    C.add(new ER_1.ER('\\)').generateAFN());
+    C.add(new ER_1.ER('\\[').generateAFN());
+    C.add(new ER_1.ER('\\]').generateAFN());
+    C.add(new ER_1.ER('\\-').generateAFN());
+    C.add(new ER_1.ER('([ -%]|\'|[,->]|[@-Z]|[^-■]|(\\.(&|[(-+]|\\?|[[-]])))').generateAFN());
     let NewRes = new AFN_1.AFN().UnirER(C);
+    //NewRes.imprimirAFN()
     const AFD = NewRes.ToAFD();
     for (let i of AFD.keys()) {
         console.log(`Estado ${i}:`);

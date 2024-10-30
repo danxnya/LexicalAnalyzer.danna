@@ -29,9 +29,8 @@ const Stack_1 = require("./tools/Stack");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const readline = __importStar(require("readline"));
-const tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, 'afd.json'), 'utf-8'));
 class AnalizadorLexico {
-    constructor() {
+    constructor(filename, sigma) {
         this.CadenaSigma = "";
         this.PasoPorEdoAcept = false;
         this.IniLexema = 0;
@@ -40,7 +39,13 @@ class AnalizadorLexico {
         this.token = -1;
         this.Pila = new Stack_1.Stack(); // Pila para almacenar los índices
         this.ultimolexema = "";
+        sigma = sigma || "";
         this.SetSigma("");
+        this.setTablaAFD(filename);
+        console.log(this.tablaAFD);
+    }
+    setTablaAFD(filename) {
+        this.tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, filename), 'utf-8'));
     }
     // Implementación de SetSigma
     SetSigma(sigma) {
@@ -69,11 +74,11 @@ class AnalizadorLexico {
         this.token = -1;
         while (this.IndiceCaracterActual < this.CadenaSigma.length) {
             const caracterActual = this.CadenaSigma.charCodeAt(this.IndiceCaracterActual);
-            const edoTransicion = tablaAFD[edoActual][caracterActual];
+            const edoTransicion = this.tablaAFD[edoActual][caracterActual];
             if (edoTransicion !== undefined && edoTransicion !== -1) {
-                if (tablaAFD[edoTransicion][256] !== undefined && tablaAFD[edoTransicion][256] !== -1) {
+                if (this.tablaAFD[edoTransicion][256] !== undefined && this.tablaAFD[edoTransicion][256] !== -1) {
                     this.PasoPorEdoAcept = true;
-                    this.token = tablaAFD[edoTransicion][256];
+                    this.token = this.tablaAFD[edoTransicion][256];
                     this.FinLexema = this.IndiceCaracterActual;
                 }
                 this.IndiceCaracterActual++;

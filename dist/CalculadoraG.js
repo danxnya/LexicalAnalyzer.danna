@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const AnalizadorLexico_1 = require("./AnalizadorLexico");
 const fs = __importStar(require("fs"));
+//! Colocar la ruta correcta del archivo AFD.json y cambiar nombre del archivo
 var TOKEN;
 (function (TOKEN) {
     TOKEN[TOKEN["PLUS"] = 10] = "PLUS";
@@ -37,7 +38,7 @@ var TOKEN;
     TOKEN[TOKEN["NUM"] = 80] = "NUM";
     TOKEN[TOKEN["END"] = 0] = "END";
 })(TOKEN || (TOKEN = {}));
-const AL = new AnalizadorLexico_1.AnalizadorLexico();
+const AL = new AnalizadorLexico_1.AnalizadorLexico('./AFD.json');
 const data = [];
 function E(resultado) {
     var _a, _b;

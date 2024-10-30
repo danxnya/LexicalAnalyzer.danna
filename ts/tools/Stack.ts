@@ -21,6 +21,14 @@ class Stack<T> {
     size(): number {
         return this.storage.length;
     }
+
+    clear(): void {
+        this.storage = [];
+    }
+
+    isEmpty(): boolean {
+        return this.size() === 0;
+    }
+
 }
 export { Stack };
-

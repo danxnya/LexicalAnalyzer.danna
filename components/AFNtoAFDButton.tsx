@@ -49,6 +49,7 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
             {/*Cambia los botones (deshabilitar)*/}
             {afns.length < 1 ? (
                 <Button 
+                    className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full"
                     sx={{
                         "&:disabled": {
                             color: "#4D4D4D",
@@ -64,7 +65,7 @@ const AFNtoAFDButton : React.FC<AFNtoAFDButtonProps> = ({ afns, onAFNtoAFD }) =>
                 ) : (     
                 <div onClick={handleOpen} className="disabled">
                     <ShinyButton
-                        className="bg-custom1 text-custom1"
+                        className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full"
                     >
                         <span className="text-custom1">
                             <Transform /> Convertir a AFD

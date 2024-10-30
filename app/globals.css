@@ -33,6 +33,11 @@
   background-color: var(--200);
 }
 
+.buttons-space{
+  width: 220px;
+  height: 40px;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: white;

@@ -2,11 +2,8 @@ import { Estado } from './Estado';
 import { Transicion } from './Transicion';
 import { SimbolosEspeciales } from './SimbolosEspeciales';
 import { Si } from './EstadosSi';
-import { Stack } from './Stack';
-import { Queue } from './Queue';
-import path from 'path';
-import { NextApiRequest, NextApiResponse } from 'next';
-
+import { Stack } from './tools/Stack';
+import { Queue } from './tools/Queue';
 
 class AFN {
     static contIdAFN: number = 0;

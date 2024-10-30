@@ -4,37 +4,12 @@
 import * as React from "react";
 import { Button, Modal, Typography, Box, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { createTheme } from "@mui/material/styles";
-import { BorderBeam } from "@/components/magic-ui/border-beam";
 import PulsatingButton from "@/components/magic-ui/pulsating-button";
+import { style } from "@/components/Theme";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
-
-// Estilos modal
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    heigth: 600,
-    bgcolor: '#FFFFFF',
-    color: 'black',
-    border: '3px solid #B3B3B3',
-    boxShadow: 24,
-    p: 4,
-};
-
-// Tema morado
-declare module '@mui/material/styles' {
-    interface Palette {
-        purple: Palette['primary'];
-    }
-    interface PaletteOptions {
-        purple: PaletteOptions['primary'];
-    }
-}
+import AFN1 from '@/public/muestraAFN';
 
 // Actualizamos el TextField para que sea morado
 declare module '@mui/material/TextField' {
@@ -42,17 +17,6 @@ declare module '@mui/material/TextField' {
         purple: true;
     }
 }
-
-const theme = createTheme({
-    palette: {
-        purple: {
-            main: "#907aa9",
-            light: "#907aa9",
-            dark: "#907aa9",
-            contrastText: "#907aa9",
-        },
-    },
-});
 
 const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated }) => {
     // Contador AFN local
@@ -82,7 +46,6 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
 
         if(input1 && input2){
             afn.creaAFNBasico(input1, input2);
-            console.log(afn.imprimirAFN());
         } else if (input1){
             afn.creaAFNBasico(input1);
         } else if (input2){
@@ -108,7 +71,7 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
     return(
         <div>
             <PulsatingButton
-                className="bg-custom1 text-custom1"
+                className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full"
                 pulseColor="#B3B3B3"
                 duration={duration}
                 onClick={handleOpen}
@@ -146,7 +109,7 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
                     />
                     <Button 
                         variant="contained"
-                        sx={{ backgroundColor: "#907aa9", padding: "8px 24px", mt: 1 }}
+                        className="bg-custom1 py-2 px-6 mt-1"
                         endIcon={<Add />}
                         onClick={handleCreateAFN}>
                             Crear AFN

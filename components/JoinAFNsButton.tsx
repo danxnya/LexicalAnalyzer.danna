@@ -48,7 +48,8 @@ const JoinAFNsButton: React.FC<JoinAFNsButtonProps> = ({ afns, onAFNJoined}) => 
         <div>
             {/*Cambia los botones (deshabilitar)*/}
             {afns.length < 1 ? (
-                <Button 
+                <Button
+                    className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full"
                     sx={{
                         "&:disabled": {
                             color: "#4D4D4D",
@@ -64,7 +65,7 @@ const JoinAFNsButton: React.FC<JoinAFNsButtonProps> = ({ afns, onAFNJoined}) => 
                 ) : (     
                 <div onClick={handleOpen} className="disabled">
                     <ShinyButton
-                        className="bg-custom1 text-custom1"
+                        className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full"
                     >
                         <span className="text-custom1">
                             <Hub /> Unir AFNs

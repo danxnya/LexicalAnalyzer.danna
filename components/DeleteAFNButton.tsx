@@ -48,7 +48,8 @@ const DeleteAFNButton : React.FC<DeleteAFNButtonProps> = ({ afns, onDeleteAFN })
         <div>
             {/*Cambia los botones (deshabilitar)*/}
             {afns.length < 1 ? (
-                <Button 
+                <Button
+                    className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full" 
                     sx={{
                         "&:disabled": {
                             color: "#4D4D4D",
@@ -62,9 +63,9 @@ const DeleteAFNButton : React.FC<DeleteAFNButtonProps> = ({ afns, onDeleteAFN })
                         Borrar AFN
                 </Button>
                 ) : (     
-                <div onClick={handleOpen} className="disabled">
+                <div onClick={handleOpen} className="items-center justify-center h-full">
                     <ShinyButton
-                        className="bg-custom1 text-custom1"
+                        className="bg-custom1 buttons-space"
                     >
                         <span className="text-custom1">
                             <Clear /> Borrar AFN

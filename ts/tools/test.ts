@@ -1,7 +1,7 @@
-import { AFN } from './AFN';
-import { Estado } from './Estado';
-import { Si } from './EstadosSi';
-import { ER } from './ER'
+import { AFN } from '../AFN';
+import { Estado } from '../Estado';
+import { Si } from '../EstadosSi';
+import { ER } from '../ER'
 
 function main() {
     console.log("TEST");

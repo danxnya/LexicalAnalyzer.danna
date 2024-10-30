@@ -1,7 +1,8 @@
 import { Console } from 'console';
 import { AFN } from './AFN';
 import { AnalizadorLexico } from "./AnalizadorLexico";
-
+import * as fs from 'fs';
+//! Refactorizar si hay tiempo
 enum TOKEN {
     OR = 10,
     CONCAT = 20,
@@ -17,16 +18,27 @@ enum TOKEN {
     SIMB = 120,
     END = 0,
 }
-type Nodo = { name: string, children?: Nodo[] }; // Variable de tipo Nodo para guardar el árbol
+type nodo = { name: string, children?: nodo[] };
 class ExpresionRegular {
     private AL: AnalizadorLexico = new AnalizadorLexico('./afd.json');
     private result: AFN = new AFN();
     private ER: string = "";
+    private tree: nodo;
 
     constructor(sigma?: string) {
         sigma = sigma || "";
+        this.tree = { name: "" };
         this.setER(sigma);
         this.AL.SetSigma(sigma);
+    }
+    getTree(): nodo {
+        return this.tree;
+    }
+    getResult(): AFN {
+        return this.result;
+    }
+    getER(): string {
+        return this.ER;
     }
     setER(sigma: string): void {
         this.ER = sigma;
@@ -34,29 +46,45 @@ class ExpresionRegular {
     }
     Parse(): boolean {
         const f: AFN = new AFN();
-        const token = this.AL.yylex();
         //console.log("Entre a parse");
-        if (this.E(f) && token === TOKEN.END) {
-            this.result = f;
-            return true;
+        const child: nodo[] = [];
+        if (this.E(f, child)) {
+            this.tree.name = "E";
+            this.tree.children = child;
+            const token = this.AL.yylex();
+            if (token === TOKEN.END) {
+                this.result = f;
+                return true;
+            }
         }
         return false
     }
-    E(f: AFN): boolean {
-        //console.log("Entre a E");
-        if (this.T(f) && this.Ep(f)) {
-            return true;
+    E(f: AFN, father: nodo[]): boolean {
+        console.log("Entre a E");
+        const childT: nodo[] = [];
+        if (this.T(f, childT)) {
+            father.push({ name: "T", children: childT });
+            const childEp: nodo[] = [];
+            if (this.Ep(f, childEp)) {
+                father.push({ name: "Ep", children: childEp });
+                return true;
+            }
         }
         return false;
     }
-    Ep(f: AFN): boolean {
+    Ep(f: AFN, father: nodo[]): boolean {
         //console.log("Entre a Ep");
         const token = this.AL.yylex();
         //console.log("\tToken: ", token);
         if (token === TOKEN.OR) {
-            if (this.T(f)) {
+            father.push({ name: "OR" });
+            const childT: nodo[] = [];
+            if (this.T(f, childT)) {
+                father.push({ name: "T", children: childT });
                 const f1 = new AFN();
-                if (this.Ep(f1)) {
+                const childEP: nodo[] = [];
+                if (this.Ep(f1, childEP)) {
+                    father.push({ name: "Ep", children: childEP });
                     f.unirAFN(f1);
                     return true;
                 }
@@ -66,23 +94,32 @@ class ExpresionRegular {
         this.AL.undoToken();
         return true;
     }
-    T(f: AFN): boolean {
-        console.log("Entre a T");
-        if (this.C(f)) {
-            if (this.Tp(f)) {
+    T(f: AFN, father: nodo[]): boolean {
+        //console.log("Entre a T");
+        const childF: nodo[] = [];
+        if (this.C(f, childF)) {
+            father.push({ name: "C", children: childF });
+            const childTp: nodo[] = [];
+            if (this.Tp(f, childTp)) {
+                father.push({ name: "Tp", children: childTp });
                 return true;
             }
         }
         return false;
     }
-    Tp(f: AFN): boolean {
-        console.log("Entre a Tp");
+    Tp(f: AFN, father: nodo[]): boolean {
+        //console.log("Entre a Tp");
         const token = this.AL.yylex();
-        console.log("\tToken: ", token);
+        //console.log("\tToken: ", token);
         if (token === TOKEN.CONCAT) {
-            if (this.C(f)) {
+            father.push({ name: "&" });
+            const childC: nodo[] = [];
+            if (this.C(f, childC)) {
+                father.push({ name: "C", children: childC });
                 const f1 = new AFN();
-                if (this.Tp(f1)) {
+                const childTp: nodo[] = [];
+                if (this.Tp(f1, childTp)) {
+                    father.push({ name: "Tp", children: childTp });
                     f.concatenacionAFN(f1);
                     return true;
                 }
@@ -92,34 +129,47 @@ class ExpresionRegular {
         this.AL.undoToken();
         return true;
     }
-    C(f: AFN): boolean {
-        console.log("Entre a C");
-        if (this.F(f)) {
-            if (this.Cp(f)) {
+    C(f: AFN, father: nodo[]): boolean {
+        //console.log("Entre a C");
+        const childF: nodo[] = [];
+        if (this.F(f, childF)) {
+            father.push({ name: "F", children: childF });
+            const childCp: nodo[] = [];
+            if (this.Cp(f, childCp)) {
+                father.push({ name: "Cp", children: childCp });
                 return true;
             }
         }
         return false;
     }
-    Cp(f: AFN): boolean {
-        console.log("Entre a Cp");
+    Cp(f: AFN, father: nodo[]): boolean {
+        //console.log("Entre a Cp");
         const token = this.AL.yylex();
-        console.log("\tToken: ", token);
+        //console.log("\tToken: ", token);
         switch (token) {
             case TOKEN.CERRPOS:
-                if (this.Cp(f)) {
+                father.push({ name: "+" });
+                const childCpPos: nodo[] = [];
+                if (this.Cp(f, childCpPos)) {
+                    father.push({ name: "Cp", children: childCpPos });
                     f.cerraduraPositiva();
                     return true;
                 } return false;
                 break;
             case TOKEN.CERRKLEEN:
-                if (this.Cp(f)) {
+                father.push({ name: "*" });
+                const childCpKleen: nodo[] = [];
+                if (this.Cp(f, childCpKleen)) {
+                    father.push({ name: "Cp", children: childCpKleen });
                     f.cerraduraKleene();
                     return true;
                 } return false;
                 break;
             case TOKEN.CERROPC:
-                if (this.Cp(f)) {
+                father.push({ name: "?" });
+                const childCpOpc: nodo[] = [];
+                if (this.Cp(f, childCpOpc)) {
+                    father.push({ name: "Cp", children: childCpOpc });
                     f.cerraduraOpcional();
                     return true;
                 } return false;
@@ -129,33 +179,44 @@ class ExpresionRegular {
                 return true;
         }
     }
-    F(f: AFN): boolean {
-        console.log("Entre a F");
+    F(f: AFN, father: nodo[]): boolean {
+        //console.log("Entre a F");
         const token = this.AL.yylex();
-        console.log("\tToken: ", token);
+        //console.log("\tToken: ", token);
         switch (token) {
             case TOKEN.LPAREN:
-                if (this.E(f)) {
+                father.push({ name: "(" });
+                const childE: nodo[] = [];
+                if (this.E(f, childE)) {
+                    father.push({ name: "E", children: childE });
                     const token1 = this.AL.yylex();
-                    console.log("\tToken: ", token1);
+                    //console.log("\tToken: ", token1);
                     if (token1 === TOKEN.RPAREN) {
+                        father.push({ name: ")" });
                         return true;
                     }
                 }
                 return false;
             case TOKEN.LCORCH:
                 const token1 = this.AL.yylex();
-                console.log("\tToken: ", token1);
+                father.push({ name: "[" });
+                //console.log("\tToken: ", token1);
                 if (token1 === TOKEN.SIMB) {
-                    const simb = this.AL.getLexema();
+                    const lexema = this.AL.getLexema();
+                    const simb = (lexema[0] == '\\') ? lexema[1] : lexema[0];
+                    father.push({ name: simb });
                     const token2 = this.AL.yylex();
-                    console.log("\tToken: ", token2);
+                    //console.log("\tToken: ", token2);
                     if (token2 === TOKEN.DASH) {
+                        father.push({ name: "-" });
                         const token3 = this.AL.yylex();
-                        console.log("\tToken: ", token3);
+                        //console.log("\tToken: ", token3);
                         if (token3 === TOKEN.SIMB) {
-                            const simb2 = this.AL.getLexema();
+                            const lexema2 = this.AL.getLexema();
+                            const simb2 = (lexema2[0] == '\\') ? lexema2[1] : lexema2[0];
+                            father.push({ name: simb2 });
                             if (this.AL.yylex() === TOKEN.RCORCH) {
+                                father.push({ name: "]" });
                                 f.creaAFNBasico(simb, simb2);
                                 return true;
                             }
@@ -164,7 +225,10 @@ class ExpresionRegular {
                 }
                 return false;
             case TOKEN.SIMB:
-                f.creaAFNBasico(this.AL.getLexema());
+                const lexema = this.AL.getLexema();
+                const simb = (lexema[0] == '\\') ? lexema[1] : lexema[0];
+                father.push({ name: simb });
+                f.creaAFNBasico(simb);
                 //f.imprimirAFN();
                 return true;
             default:
@@ -174,18 +238,28 @@ class ExpresionRegular {
     }
     test(): void {
         console.log("Test1--------------------------------------------------");
-        this.setER('[ -%]OR\'OR[,->]OR[@-Z]OR[^-■]');
+        this.setER('[ -%]OR\'                OR[,->]OR[@-Z]OR[^-■]');
         if (this.Parse()) {
             console.log("AFN generado");
             this.result.imprimirAFN();
         }
+        guardarArbolConResultado(this.getTree(), "test1.json");
         console.log("Test2--------------------------------------------------");
         this.setER('(]');
         if (this.Parse()) {
             console.log("AFN generado");
             this.result.imprimirAFN();
         }
+        console.log(this.getTree());
     }
+}
+const data: Array<{ tree: nodo }> = [];
+function guardarArbolConResultado(tree: nodo, nombreArchivo: string) {
+    const nuevoArbol = { tree };
+    data.push(nuevoArbol); // Agregar el nuevo árbol al arreglo en memoria
+
+    fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
+    console.log(`Árbol y resultado guardados en ${nombreArchivo}`);
 }
 
 const ER: ExpresionRegular = new ExpresionRegular();

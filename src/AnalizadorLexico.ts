@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
 
-const tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, 'afd.json'), 'utf-8'));
+
 
 class AnalizadorLexico {
     private CadenaSigma: string = "";
@@ -15,11 +15,18 @@ class AnalizadorLexico {
     private token: number = -1;
     private Pila: Stack<number> = new Stack<number>();  // Pila para almacenar los índices
     private ultimolexema: string = "";
+    private tablaAFD: any;
 
-    constructor() {
+    constructor(filename: string, sigma?: string) {
+        sigma = sigma || "";
         this.SetSigma("");
+        this.setTablaAFD(filename);
+        console.log(this.tablaAFD);
     }
-
+    setTablaAFD(filename: string) {
+        this.SetSigma("");
+        this.tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, filename), 'utf-8'));
+    }
 
     // Implementación de SetSigma
     public SetSigma(sigma: string): void {
@@ -54,12 +61,12 @@ class AnalizadorLexico {
         while (this.IndiceCaracterActual < this.CadenaSigma.length) {
             const caracterActual = this.CadenaSigma.charCodeAt(this.IndiceCaracterActual);
 
-            const edoTransicion = tablaAFD[edoActual][caracterActual];
+            const edoTransicion = this.tablaAFD[edoActual][caracterActual];
 
             if (edoTransicion !== undefined && edoTransicion !== -1) {
-                if (tablaAFD[edoTransicion][256] !== undefined && tablaAFD[edoTransicion][256] !== -1) {
+                if (this.tablaAFD[edoTransicion][256] !== undefined && this.tablaAFD[edoTransicion][256] !== -1) {
                     this.PasoPorEdoAcept = true;
-                    this.token = tablaAFD[edoTransicion][256];
+                    this.token = this.tablaAFD[edoTransicion][256];
                     this.FinLexema = this.IndiceCaracterActual;
                 }
 
@@ -82,9 +89,9 @@ class AnalizadorLexico {
             this.IndiceCaracterActual = this.FinLexema + 1;
             this.ultimolexema = lexema;
 
-            if (this.token === SimbolosEspeciales.OMITIR) 
+            if (this.token === SimbolosEspeciales.OMITIR)
                 return this.yylex();  // Salta los tokens omitidos
-            else 
+            else
                 return this.token;
         }
     }
@@ -131,7 +138,7 @@ class AnalizadorLexico {
     }
 }
 
-// const analizador = new AnalizadorLexico();
-// analizador.LineaPorLinea('../dump/test.txt');
+//const analizador = new AnalizadorLexico("afd.json");
+//analizador.LineaPorLinea('../dump/test.txt');
 
 export { AnalizadorLexico };

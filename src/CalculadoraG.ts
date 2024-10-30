@@ -1,6 +1,6 @@
 import { AnalizadorLexico } from "./AnalizadorLexico";
 import * as fs from 'fs';
-
+//! Colocar la ruta correcta del archivo AFD.json y cambiar nombre del archivo
 enum TOKEN {
     PLUS = 10,
     MINUS = 20,
@@ -13,7 +13,7 @@ enum TOKEN {
     END = 0,
 }
 
-const AL = new AnalizadorLexico();
+const AL = new AnalizadorLexico('./AFD.json');
 
 type Nodo = { name: string, children?: Nodo[] }; // Variable de tipo Nodo para guardar el árbol
 

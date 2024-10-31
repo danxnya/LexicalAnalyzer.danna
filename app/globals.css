@@ -38,6 +38,27 @@
   height: 40px;
 }
 
+.buttons-space-end{
+  width: 220px;
+  height: 96px;
+}
+
+.button-upload{
+  background-color: #326ab9;
+  color: #ffffff;
+  &:hover{
+    background-color: #003785;
+  } 
+}
+
+.button-upload-ready{
+  background-color: green;
+  color: #ffffff;
+  &:hover{
+    cursor: not-allowed;
+  }
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: white;

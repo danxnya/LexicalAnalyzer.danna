@@ -9,7 +9,7 @@ import { style } from "@/components/Theme";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
-import AFN1 from '@/public/muestraAFN';
+import { ExpresionRegular } from "@/ts/ExpresionRegular";
 
 // Actualizamos el TextField para que sea morado
 declare module '@mui/material/TextField' {
@@ -18,7 +18,7 @@ declare module '@mui/material/TextField' {
     }
 }
 
-const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated }) => {
+const ERtoAFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated }) => {
     // Contador AFN local
     const [hasAFN, setHasAFN] = React.useState(false);
 
@@ -29,37 +29,31 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
 
     // Estados para los inputs
     const [input1, setInput1] = React.useState('');
-    const [input2, setInput2] = React.useState('');
 
     // Manejadores para los inputs
     const handleInput1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput1(event.target.value);
-    };
-
-    const handleInput2Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput2(event.target.value);
+        // Eliminar saltos de linea
+        const cleanedValue = event.target.value.replace(/\n/g, '').trim();
+        setInput1(cleanedValue);
     };
 
     // Función para manejar la creación del AFN
-    const handleCreateAFN = () => {
-        const afn = new AFN();
+    const handleCreateAFNfromER = () => {
+        if(input1){
+            const ER = new ExpresionRegular(input1);
 
-        if(input1 && input2){
-            afn.creaAFNBasico(input1, input2);
-        } else if (input1){
-            afn.creaAFNBasico(input1);
-        } else if (input2){
-            afn.creaAFNBasico(input2);
-        } else {
-            console.log("error");
+            if (ER.Parse()) {
+                const afn = ER.getResult();
+                onAFNCreated(afn);
+            } else {
+                console.log(ER.Parse());
+            }
         }
 
-        onAFNCreated(afn);
         setHasAFN(true);
 
         // Reinciar los inputs
         setInput1('');
-        setInput2('');
 
         // Cerramos el modal
         handleClose();
@@ -76,7 +70,7 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
                 duration={duration}
                 onClick={handleOpen}
             >
-                <Add /><Typography variant="button" className="ml-2">CREAR AFN</Typography>
+                <Add /><Typography variant="button" className="ml-2">ER a AFN</Typography>
             </PulsatingButton>
             <Modal
                 open={open}
@@ -86,23 +80,15 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Crear AFN
+                        Crear AFN a partir de una Expresión Regular
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Ingresa un número o simbolo para crear el AFN
+                        Ingresa la expresión regular
                     </Typography>
                     <TextField
-                        label="Número o simbolo 1"
+                        label="Expresión Regular"
                         value={input1}
                         onChange={handleInput1Change}
-                        fullWidth
-                        color="purple"
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Número o simbolo 2"
-                        value={input2}
-                        onChange={handleInput2Change}
                         fullWidth
                         color="purple"
                         margin="normal"
@@ -111,7 +97,7 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
                         variant="contained"
                         className="bg-custom1 py-2 px-6 mt-1"
                         endIcon={<Add />}
-                        onClick={handleCreateAFN}>
+                        onClick={handleCreateAFNfromER}>
                             Crear AFN
                     </Button>
                 </Box>
@@ -120,4 +106,4 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
     );
 };
 
-export default AFNButton;
+export default ERtoAFNButton;

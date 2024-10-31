@@ -6,10 +6,11 @@ import ForceGraph from "@/components/d3/ForceGraph";
 import Menu from "@/components/Menu";
 import { AFN } from "@/ts/AFN";
 import TypingAnimation from '@/components/magic-ui/typing-animation';
-import ShineBorder from "@/components/magic-ui/shine-border";
 import WordPullUp from '@/components/magic-ui/word-pull-up';
 import ForceGraphMuestra from '@/components/d3/ForceGraphMuestra';
 import AFN1 from '@/public/muestraAFN';
+import GridPattern from '@/components/magic-ui/animated-grid-pattern';
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [afns, setAFNs] = useState<AFN[]>([]);
@@ -46,15 +47,15 @@ export default function Home() {
   };
 
   return (
-    <div className="grid gap-1 min-h-screen h-full">
-      <div className="col-span-5 items-center justify-center mt-2">
+    <div className="grid gap-1 min-h-screen h-full overflow-hidden">
+      <div className="col-span-5 items-center justify-center mt-2 z-10">
         <TypingAnimation
           className="text-4xl font-bold text-black"
           text="Proyecto Compiladores"
           duration={100}
         />
       </div>
-      <div className="col-span-5 row-span-4 row-start-2 h-full">
+      <div className="col-span-5 row-span-4 row-start-2 h-full z-10 bg-opacity-100">
         <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-lg">
 
           {/*Grafo pureba o Grafo creado*/}
@@ -84,9 +85,10 @@ export default function Home() {
           {/*<BorderBeam size={500} borderWidth={3} colorFrom='#8839ef' colorTo='#04a5e5'/>*/}
         </div>
       </div>
-      <div className="col-span-5 row-start-6 self-end flex justify-center items-center">
+      <div className="col-span-5 row-start-6 self-end flex justify-center items-center z-10">
         <Menu onAFNCreated={handleAFNCreated} afns={afns} onAFNJoined={handleAFNJoined}/>
       </div>
+      <GridPattern maxOpacity={0.5}/>
     </div>
   );
 }

@@ -1,10 +1,5 @@
 import { SimbolosEspeciales } from './SimbolosEspeciales';
 import { Stack } from './tools/Stack';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as readline from 'readline';
-
-
 
 class AnalizadorLexico {
     private CadenaSigma: string = "";
@@ -13,19 +8,19 @@ class AnalizadorLexico {
     private FinLexema: number = -1;
     private IndiceCaracterActual: number = 0;
     private token: number = -1;
-    private Pila: Stack<number> = new Stack<number>();  // Pila para almacenar los índices
+    private Pila: Stack<number> = new Stack<number>(); // Pila para almacenar los índices
     private ultimolexema: string = "";
     private tablaAFD: any;
 
-    constructor(filename: string, sigma?: string) {
+    constructor(tablaAFD: any, sigma?: string) {
         sigma = sigma || "";
-        this.SetSigma("");
-        this.setTablaAFD(filename);
+        this.SetSigma(sigma);
+        this.setTablaAFD(tablaAFD);
         console.log(this.tablaAFD);
     }
-    setTablaAFD(filename: string) {
-        this.SetSigma("");
-        this.tablaAFD = JSON.parse(fs.readFileSync(path.join(__dirname, filename), 'utf-8'));
+
+    setTablaAFD(tablaAFD: any) {
+        this.tablaAFD = tablaAFD;
     }
 
     // Implementación de SetSigma
@@ -36,7 +31,7 @@ class AnalizadorLexico {
         this.FinLexema = -1;
         this.IndiceCaracterActual = 0;
         this.token = -1;
-        this.Pila.clear();  // Limpia la pila cuando se establece una nueva cadena
+        this.Pila.clear();                  // Limpia la pila cuando se establece una nueva cadena
         this.ultimolexema = "";
     }
 
@@ -103,42 +98,14 @@ class AnalizadorLexico {
     // Implementación de undoToken
     public undoToken(): boolean {
         if (this.Pila.size() > 0) {
-            const ultimoIndice = this.Pila.pop();  // Restaura el índice del último token leído
+            const ultimoIndice = this.Pila.pop();
             if (ultimoIndice !== undefined) {
-                this.IndiceCaracterActual = ultimoIndice;  // Restablecemos la posición
+                this.IndiceCaracterActual = ultimoIndice;
                 return true;
             }
         }
         return false;
     }
-
-
-    // Función para leer un archivo y procesarlo línea por línea con yylex
-    public LineaPorLinea(filename: string): void {
-        const filePath = path.join(__dirname, filename);
-
-        const rl = readline.createInterface({
-            input: fs.createReadStream(filePath),
-            output: process.stdout,
-            terminal: false,
-        });
-
-        rl.on('line', (line: string) => {
-            this.SetSigma(line);
-            let result;
-            do {
-                result = this.yylex();
-                console.log(`${this.ultimolexema},${result}`);
-            } while (result !== SimbolosEspeciales.FIN);
-        });
-
-        rl.on('close', () => {
-            // console.log('Fin de archivo');
-        });
-    }
 }
-
-//const analizador = new AnalizadorLexico("afd.json");
-//analizador.LineaPorLinea('../dump/test.txt');
 
 export { AnalizadorLexico };

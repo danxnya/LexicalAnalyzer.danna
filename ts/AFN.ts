@@ -1,7 +1,7 @@
 import { Estado } from './Estado';
 import { Transicion } from './Transicion';
 import { SimbolosEspeciales } from './SimbolosEspeciales';
-import { Si } from './EstadosSi';
+import { Si } from './tools/CompareSets';
 import { Stack } from './tools/Stack';
 import { Queue } from './tools/Queue';
 

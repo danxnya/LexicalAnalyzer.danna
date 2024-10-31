@@ -6,6 +6,7 @@ import { Button, Modal, Typography, Box, InputLabel, MenuItem, FormControl, Sele
 import { Emergency } from "@mui/icons-material";
 import { style } from "@/components/Theme"
 import ShinyButton from "@/components/magic-ui/shiny-button";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
@@ -40,8 +41,16 @@ const CerraduraOpcionalAFNButton : React.FC<CerraduraKleeneAFNButtonProps> = ({ 
         if(selectedAFN) {
             selectedAFN.cerraduraKleene();
             onAFNCerraduraKleene(selectedAFN);
+            // Alerta
+            ejecutarAlerta('success', 'Cerradura de Kleene Exitosa', 'bottom-end');
+            setAFN('');
+            handleClose();
+        } else {
+            // Alerta
+            ejecutarAlerta('error', 'No se ha seleccionado el AFN', 'bottom-end');
+            setAFN('');
+            handleClose();
         }
-        handleClose();
     };
 
     return(
@@ -88,7 +97,7 @@ const CerraduraOpcionalAFNButton : React.FC<CerraduraKleeneAFNButtonProps> = ({ 
                             Selecciona el AFN al que se le aplicará la cerradura de Kleene
                         </Typography>
                         <FormControl sx={{ mt: 2, minWidth: 120 }} size="small" color="purple">
-                            <InputLabel id="afn1-select-label">AFN 1</InputLabel>
+                            <InputLabel id="afn1-select-label">AFN</InputLabel>
                             <Select
                                 labelId="afn1-select-label"
                                 id="afn-select"

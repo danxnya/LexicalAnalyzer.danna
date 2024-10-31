@@ -6,6 +6,7 @@ import { Button, Modal, Typography, Box, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import PulsatingButton from "@/components/magic-ui/pulsating-button";
 import { style } from "@/components/Theme";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
@@ -44,12 +45,26 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
     const handleCreateAFN = () => {
         const afn = new AFN();
 
-        if(input1 && input2){
-            afn.creaAFNBasico(input1, input2);
-        } else if (input1){
-            afn.creaAFNBasico(input1);
-        } else if (input2){
-            afn.creaAFNBasico(input2);
+        const value1 = (input1.length > 1) ? parseInt(input1) : input1;
+        const value2 = (input2.length > 1) ? parseInt(input2) : input2;
+
+        console.log(typeof value1, typeof value2);
+        
+        if (input1 && input2) {
+            if (typeof value1 === 'number' && typeof value2 === 'number')
+                afn.creaAFNBasico(value1, value2);
+            else if (typeof value1 === 'string' && typeof value2 === 'string')
+                afn.creaAFNBasico(value1, value2);
+        } else if (input1) {
+            if (typeof value1 === 'number')
+                afn.creaAFNBasico(value1);
+            else if (typeof value1 === 'string')
+                afn.creaAFNBasico(value1);
+        } else if (input2) {
+            if (typeof value2 === 'number')
+                afn.creaAFNBasico(input2);
+            else if (typeof value2 === 'string')
+                afn.creaAFNBasico(input2);
         } else {
             console.log("error");
         }
@@ -63,6 +78,9 @@ const AFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCreated
 
         // Cerramos el modal
         handleClose();
+
+        // Alerta
+        ejecutarAlerta('success', 'AFN creado', 'bottom-end');
     };
 
     // Deshabilitar pulso si ya hay un AFN

@@ -6,6 +6,7 @@ import { Button, Modal, Typography, Box, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import PulsatingButton from "@/components/magic-ui/pulsating-button";
 import { style } from "@/components/Theme";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
@@ -32,9 +33,7 @@ const ERtoAFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCre
 
     // Manejadores para los inputs
     const handleInput1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // Eliminar saltos de linea
-        const cleanedValue = event.target.value.replace(/\n/g, '').trim();
-        setInput1(cleanedValue);
+        setInput1(event.target.value);
     };
 
     // Función para manejar la creación del AFN
@@ -45,16 +44,16 @@ const ERtoAFNButton: React.FC<{ onAFNCreated: (afn: AFN) => void}> = ({ onAFNCre
             if (ER.Parse()) {
                 const afn = ER.getResult();
                 onAFNCreated(afn);
+                setHasAFN(true);
+                // Alerta
+                ejecutarAlerta('success', 'AFN creado', 'bottom-end');
             } else {
-                console.log(ER.Parse());
+                // Alerta
+                ejecutarAlerta('error', 'Cadena no valida', 'bottom-end');
             }
         }
-
-        setHasAFN(true);
-
         // Reinciar los inputs
         setInput1('');
-
         // Cerramos el modal
         handleClose();
     };

@@ -5,6 +5,7 @@ import { Button, Modal, Typography, Box, InputLabel, MenuItem, FormControl, Sele
 import { JoinFull } from "@mui/icons-material";
 import ShinyButton from "@/components/magic-ui/shiny-button";
 import { style } from "@/components/Theme"
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
@@ -48,6 +49,16 @@ const JoinAFNButton: React.FC<JoinAFNButtonProps> = ({ afns, onAFNJoined}) => {
 
             // Aquí pasamos el AFN1 modificado
             onAFNJoined(selectedAFN1);
+            // Alerta
+            ejecutarAlerta('success', 'AFNs unidos', 'bottom-end');
+            setAFN1('');
+            setAFN2('');
+            handleClose();
+        } else {
+            // Alerta
+            ejecutarAlerta('error', 'No se han seleccionado los dos AFNs', 'bottom-end');
+            setAFN1('');
+            setAFN2('');
             handleClose();
         }
     };
@@ -97,7 +108,7 @@ const JoinAFNButton: React.FC<JoinAFNButtonProps> = ({ afns, onAFNJoined}) => {
                         Selecciona los dos AFN que deseas unir
                     </Typography>
                     <FormControl sx={{ mt: 2, minWidth: 120 }} size="small" color="purple">
-                        <InputLabel id="afn1-select-label">AFN 1</InputLabel>
+                        <InputLabel id="afn1-select-label">1er AFN</InputLabel>
                         <Select
                             labelId="afn1-select-label"
                             id="afn-select"
@@ -113,7 +124,7 @@ const JoinAFNButton: React.FC<JoinAFNButtonProps> = ({ afns, onAFNJoined}) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ m: 2, ml: 2, minWidth: 120 }} size="small" color="purple">
-                        <InputLabel id="afn2-select-label">AFN 2</InputLabel>
+                        <InputLabel id="afn2-select-label">2do AFN</InputLabel>
                         <Select
                             labelId="afn2-select-label"
                             id="afn-select"

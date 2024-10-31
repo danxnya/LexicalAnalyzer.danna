@@ -6,6 +6,7 @@ import { Button, Modal, Typography, Box, InputLabel, MenuItem, FormControl, Sele
 import { Clear } from "@mui/icons-material";
 import { style } from "@/components/Theme"
 import ShinyButton from "@/components/magic-ui/shiny-button";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
@@ -40,8 +41,16 @@ const DeleteAFNButton : React.FC<DeleteAFNButtonProps> = ({ afns, onDeleteAFN })
         if(selectedAFN) {
             selectedAFN.borrarAFD();
             onDeleteAFN(selectedAFN);
+            // Alerta
+            ejecutarAlerta('success', 'AFN borrado con exito', 'bottom-end');
+            setAFN('');
+            handleClose();
+        } else {
+            // Alerta
+            ejecutarAlerta('error', 'No se ha seleccionado el AFN', 'bottom-end');
+            setAFN('');
+            handleClose();
         }
-        handleClose();
     };
 
     return(

@@ -1,5 +1,7 @@
 import { AnalizadorLexico } from "./AnalizadorLexico";
-import * as fs from 'fs';
+import JSON from "@/ts/Calculadora.json"
+//import * as fs from 'fs';
+
 //! Colocar la ruta correcta del archivo AFD.json y cambiar nombre del archivo
 enum TOKEN {
     PLUS = 10,
@@ -13,7 +15,7 @@ enum TOKEN {
     END = 0,
 }
 
-const AL = new AnalizadorLexico('./AFD.json');
+const AL = new AnalizadorLexico(JSON);
 
 type Nodo = { name: string, children?: Nodo[] }; // Variable de tipo Nodo para guardar el árbol
 
@@ -127,7 +129,7 @@ function guardarArbolConResultado(tree: Nodo, resultado: number, nombreArchivo: 
     const nuevoArbol = { tree, resultado };
     data.push(nuevoArbol); // Agregar el nuevo árbol al arreglo en memoria
 
-    fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
+    //fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
     // console.log(`Árbol y resultado guardados en ${nombreArchivo}`);
 }
 
@@ -160,11 +162,11 @@ function recorrerPostorden(nodo: Nodo): string {
     return resultado.trim();
 }
 
-function limpiarArchivo(nombreArchivo: string) {
+/*function limpiarArchivo(nombreArchivo: string) {
     fs.writeFileSync(nombreArchivo, '', 'utf-8');
-}
+}*/
 
-function parseConPostfijo(input: string): { valid: boolean, postfijo: string, resultado: number } {
+export function parseConPostfijo(input: string): { valid: boolean, postfijo: string, resultado: number } {
     AL.SetSigma(input);
     const resultado = { val: 0 };
     const eResult = E(resultado);
@@ -195,5 +197,5 @@ function runTestsConPostfijo() {
 }
 
 
-limpiarArchivo('./dump/tree.json');
+//limpiarArchivo('./dump/tree.json');
 runTestsConPostfijo();

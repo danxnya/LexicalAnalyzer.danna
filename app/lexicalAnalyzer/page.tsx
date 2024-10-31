@@ -9,6 +9,7 @@ import { Abc, Upload, Check } from "@mui/icons-material";
 import { style } from "@/components/Theme";
 import { AnalizadorLexico } from "@/ts/AnalizadorLexico";
 import { SimbolosEspeciales } from "@/ts/SimbolosEspeciales";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Actualizamos el TextField para que sea morado
 declare module '@mui/material/FormControl' {
@@ -16,6 +17,27 @@ declare module '@mui/material/FormControl' {
         purple: true;
     }
 }
+
+// Estilos personalizados
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: '#FFFFFF',
+      textAlign: 'center', // Color para las filas impares
+    },
+    '&:nth-of-type(even)': {
+      backgroundColor: '#E6E6E6',
+      textAlign: 'center', // Color para las filas pares
+    },
+  }));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    '&.MuiTableCell-head': {
+      backgroundColor: '#999999', // Color para el encabezado
+      color: theme.palette.common.white,
+      fontSize: '1.2rem',
+      fontWeight: 'bold'
+    },
+}));
 
 const page: React.FC = () => {
     // Estados para carga y lectura del JSON
@@ -46,6 +68,7 @@ const page: React.FC = () => {
                 }
             };
             reader.readAsText(file);
+            ejecutarAlerta('success', 'Archivo subido correctamente', 'bottom-end');
         }
     };
 
@@ -60,6 +83,7 @@ const page: React.FC = () => {
             } while (result !== SimbolosEspeciales.FIN);
             setLexemas(nuevosLexemas); // Actualiza el estado con los nuevos lexemas
             setLexema(nuevosLexemas.map(l => `${l.caracter}, ${l.token}`).join("\n")); // Actualiza el estado de lexema para el texto
+            ejecutarAlerta('success', 'Cerradura de analizada', 'bottom-end');
         }
     };
 
@@ -67,30 +91,17 @@ const page: React.FC = () => {
         <div>
             <div className="flex justify-center z-10">
                 <HyperText
-                    className="text-4xl font-bold text-black"
+                    className="text-6xl font-bold text-black"
                     text="Analizador Léxico"
                 />
             </div>         
-            <div className="grid grid-cols-3 grid-rows-1 gap-4">
-                <div className="flex w-full">
-                    <TextField
-                        id="cadena-ingresada"
-                        label="Ingresa una cadena"
-                        multiline
-                        fullWidth
-                        variant="filled"
-                        color="purple"
-                        maxRows={30}
-                        value={input1}
-                        onChange={handleInput1Change}
-                    />
-                </div>
-                <div className="flex items-center justify-center">               
-                    <div className="grid grid-cols-1 grid-rows-3 gap-4">
-                        <div className="flex items-center justify-center text-black">
-                            <Typography variant="h5" component="h2"> Sube tu archivo JSON </Typography>
+            <div className="grid grid-cols-2 grid-rows-1 gap-4">
+                <div className="items-center justify-center max-w-md mx-auto">
+                    <div className="grid grid-cols-1 gap-2 w-full">
+                        <div className="flex items-center justify-center text-black mb-2">
+                            <Typography variant="h5" component="h2">Sube tu Automata Finito Determinista</Typography>
                         </div>
-                        <div className="flex items-center justify-center text-center flex-col">
+                        <div className="flex items-center justify-center text-center flex-col mb-2">
                             <input
                                 accept=".json"
                                 style={{ display: 'none' }}
@@ -108,18 +119,40 @@ const page: React.FC = () => {
                                     Subir Archivo
                                 </Button>
                             </label>
-                            <Typography variant="caption" className="text-black mt-2">
-                                    Solo archivos JSON
+                            <Typography variant="caption" className="text-black mt-1">
+                                Solo archivos JSON
                             </Typography>
                         </div>
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center w-full">
+                            <TextField
+                                id="cadena-ingresada"
+                                label="Ingresa una cadena"
+                                multiline
+                                variant="filled"
+                                color="purple"
+                                sx={{
+                                    width: '100%',          // Ancho total del contenedor
+                                    height: '500px',         // Altura mayor para el TextField
+                                    overflowY: 'auto',       // Agrega scroll si el contenido excede la altura
+                                }}
+                                value={input1}
+                                onChange={handleInput1Change}
+                                disabled={!analizador}
+                            />
+                        </div>
+                        <div className="flex items-center justify-center w-full mt-2">
                             <Button
                                 variant="contained"
-                                className="bg-custom1 text-custom1 buttons-space items-center justify-center h-full"
+                                className="bg-custom1 text-custom1 items-center justify-center h-full"
                                 size="large"
                                 startIcon={<Abc />}
                                 onClick={handleAnalyze}
                                 disabled={!analizador}
+                                sx={{
+                                    width: '100%',          // Ancho total del botón
+                                    maxWidth: '250px',      // Limite del ancho del botón
+                                    height: '50px',         // Altura del botón
+                                }}
                             >
                                 Analizar
                             </Button>
@@ -128,20 +161,20 @@ const page: React.FC = () => {
                 </div>
                 <div>
                     <Paper sx={{ width: '100%', overflow: 'hidden'}}>
-                        <TableContainer style={{ maxHeight: '92vh' }}>
+                        <TableContainer style={{ maxHeight: '90vh' }}>
                             <Table stickyHeader aria-label="sticky table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Caracter</TableCell>
-                                        <TableCell>Token</TableCell>    
+                                        <StyledTableCell>Caracter</StyledTableCell>
+                                        <StyledTableCell>Token</StyledTableCell>    
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {lexemas.map((lexema, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{lexema.caracter}</TableCell>
-                                            <TableCell>{lexema.token}</TableCell>
-                                        </TableRow>
+                                        <StyledTableRow key={index}>
+                                            <StyledTableCell>{lexema.caracter}</StyledTableCell>
+                                            <StyledTableCell>{lexema.token}</StyledTableCell>
+                                        </StyledTableRow>
                                     ))}
                                 </TableBody>
                             </Table>
@@ -149,6 +182,7 @@ const page: React.FC = () => {
                     </Paper>
                 </div>
             </div>
+            <GridPattern maxOpacity={0.5} className="grid-config"/>
         </div>
     );
 }

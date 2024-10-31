@@ -15,7 +15,8 @@ enum TOKEN {
     LCORCH = 90,
     RCORCH = 100,
     DASH = 110,
-    SIMB = 120,
+    SIMBDIAG = 120,
+    SIMB = 130,
     END = 0,
 }
 
@@ -59,6 +60,7 @@ class ExpresionRegular {
             this.tree.name = "E";
             this.tree.children = child;
             const token = this.AL.yylex();
+            console.log("\tToken: ", token);
             if (token === TOKEN.END) {
                 this.result = f;
                 return true;
@@ -84,17 +86,17 @@ class ExpresionRegular {
     Ep(f: AFN, father: nodo[]): boolean {
         console.log("Entre a Ep");
         const token = this.AL.yylex();
-        //console.log("\tToken: ", token);
+        console.log("\tToken: ", token);
         if (token === TOKEN.OR) {
             father.push({ name: "OR" });
+            const f1 = new AFN();
             const childT: nodo[] = [];
-            if (this.T(f, childT)) {
+            if (this.T(f1, childT)) {
                 father.push({ name: "T", children: childT });
-                const f1 = new AFN();
+                f.unirAFN(f1);
                 const childEP: nodo[] = [];
-                if (this.Ep(f1, childEP)) {
+                if (this.Ep(f, childEP)) {
                     father.push({ name: "Ep", children: childEP });
-                    f.unirAFN(f1);
                     return true;
                 }
             }
@@ -121,17 +123,17 @@ class ExpresionRegular {
     Tp(f: AFN, father: nodo[]): boolean {
         console.log("Entre a Tp");
         const token = this.AL.yylex();
-        //console.log("\tToken: ", token);
+        console.log("\tToken: ", token);
         if (token === TOKEN.CONCAT) {
             father.push({ name: "&" });
             const childC: nodo[] = [];
-            if (this.C(f, childC)) {
+            const f1 = new AFN();
+            if (this.C(f1, childC)) {
                 father.push({ name: "C", children: childC });
-                const f1 = new AFN();
+                f.concatenacionAFN(f1);
                 const childTp: nodo[] = [];
-                if (this.Tp(f1, childTp)) {
+                if (this.Tp(f, childTp)) {
                     father.push({ name: "Tp", children: childTp });
-                    f.concatenacionAFN(f1);
                     return true;
                 }
             }
@@ -158,32 +160,32 @@ class ExpresionRegular {
     Cp(f: AFN, father: nodo[]): boolean {
         console.log("Entre a Cp");
         const token = this.AL.yylex();
-        //console.log("\tToken: ", token);
+        console.log("\tToken: ", token);
         switch (token) {
             case TOKEN.CERRPOS:
                 father.push({ name: "+" });
                 const childCpPos: nodo[] = [];
+                f.cerraduraPositiva();
                 if (this.Cp(f, childCpPos)) {
                     father.push({ name: "Cp", children: childCpPos });
-                    f.cerraduraPositiva();
                     return true;
                 } return false;
                 break;
             case TOKEN.CERRKLEEN:
                 father.push({ name: "*" });
                 const childCpKleen: nodo[] = [];
+                f.cerraduraKleene();
                 if (this.Cp(f, childCpKleen)) {
                     father.push({ name: "Cp", children: childCpKleen });
-                    f.cerraduraKleene();
                     return true;
                 } return false;
                 break;
             case TOKEN.CERROPC:
                 father.push({ name: "?" });
                 const childCpOpc: nodo[] = [];
+                f.cerraduraOpcional();
                 if (this.Cp(f, childCpOpc)) {
                     father.push({ name: "Cp", children: childCpOpc });
-                    f.cerraduraOpcional();
                     return true;
                 } return false;
                 break
@@ -196,7 +198,7 @@ class ExpresionRegular {
     F(f: AFN, father: nodo[]): boolean {
         console.log("Entre a F");
         const token = this.AL.yylex();
-        //console.log("\tToken: ", token);
+        console.log("\tToken: ", token);
         switch (token) {
             case TOKEN.LPAREN:
                 father.push({ name: "(" });
@@ -204,7 +206,7 @@ class ExpresionRegular {
                 if (this.E(f, childE)) {
                     father.push({ name: "E", children: childE });
                     const token1 = this.AL.yylex();
-                    //console.log("\tToken: ", token1);
+                    console.log("\tToken: ", token1);
                     if (token1 === TOKEN.RPAREN) {
                         father.push({ name: ")" });
                         return true;
@@ -214,18 +216,18 @@ class ExpresionRegular {
             case TOKEN.LCORCH:
                 const token1 = this.AL.yylex();
                 father.push({ name: "[" });
-                //console.log("\tToken: ", token1);
-                if (token1 === TOKEN.SIMB) {
+                console.log("\tToken: ", token1);
+                if (token1 === TOKEN.SIMB || token1 === TOKEN.SIMBDIAG) {
                     const lexema = this.AL.getLexema();
                     const simb = (lexema[0] == '\\') ? lexema[1] : lexema[0];
                     father.push({ name: simb });
                     const token2 = this.AL.yylex();
-                    //console.log("\tToken: ", token2);
+                    console.log("\tToken: ", token2);
                     if (token2 === TOKEN.DASH) {
                         father.push({ name: "-" });
                         const token3 = this.AL.yylex();
-                        //console.log("\tToken: ", token3);
-                        if (token3 === TOKEN.SIMB) {
+                        console.log("\tToken: ", token3);
+                        if (token3 === TOKEN.SIMB || token3 === TOKEN.SIMBDIAG) {
                             const lexema2 = this.AL.getLexema();
                             const simb2 = (lexema2[0] == '\\') ? lexema2[1] : lexema2[0];
                             father.push({ name: simb2 });
@@ -238,9 +240,11 @@ class ExpresionRegular {
                     }
                 }
                 return false;
+            case TOKEN.SIMBDIAG:
             case TOKEN.SIMB:
                 const lexema = this.AL.getLexema();
-                const simb = (lexema[0] == '\\') ? lexema[1] : lexema[0];
+                const simb = (lexema[0] === '\\') ? lexema[1] : lexema[0];
+                console.log("\tLexema: ", lexema);
                 father.push({ name: simb });
                 f.creaAFNBasico(simb);
                 //f.imprimirAFN();

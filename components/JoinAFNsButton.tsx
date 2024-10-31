@@ -5,6 +5,7 @@ import { Button, Modal, Typography, Box } from "@mui/material";
 import { Hub } from "@mui/icons-material";
 import { style } from "@/components/Theme"
 import ShinyButton from "@/components/magic-ui/shiny-button";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
@@ -41,6 +42,9 @@ const JoinAFNsButton: React.FC<JoinAFNsButtonProps> = ({ afns, onAFNJoined}) => 
         }
 
         onAFNJoined(NewRes);
+
+        // Alerta
+        ejecutarAlerta('success', 'AFNs unidos', 'bottom-end');
         handleClose();
     };
 

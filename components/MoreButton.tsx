@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import ShimmerButton from "@/components/magic-ui/shimmer-button";
-import { List, ListItem, ListItemButton, ListItemText, DialogTitle, Dialog, Typography } from "@mui/material";
-import MoreHoriz from "@mui/icons-material/MoreHoriz";
+import { List, ListItem, ListItemButton, ListItemText, DialogTitle, Dialog, Typography, ListItemIcon } from "@mui/material";
+import { MoreHoriz, Abc, Calculate } from "@mui/icons-material";
 import Link from 'next/link';
 
 const opciones = {
-    'Analizador Lexico': '/lexicalAnalyzer', 
-    'Calculadora': '/calculator'};
+    'Analizador Lexico': { link: '/lexicalAnalyzer', icon: <Abc />}, 
+    'Calculadora': { link: '/calculator', icon: <Calculate />}};
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -31,9 +31,10 @@ function SimpleDialog(props: SimpleDialogProps) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Selecciona una opción</DialogTitle>
       <List sx={{ pt: 0 }}>
-        {Object.entries(opciones).map(([opt, link]) => (
+        {Object.entries(opciones).map(([opt, { link, icon }]) => (
           <ListItem disableGutters key={opt}>
             <ListItemButton onClick={() => handleListItemClick(opt)}>
+              <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={
                     <Link href={link}>
                         {opt}

@@ -8,6 +8,7 @@ import ShinyButton from "@/components/magic-ui/shiny-button";
 
 // Importamos los TS que dan funcionalidad al componente
 import { AFN } from "@/ts/AFN";
+import { ejecutarAlerta } from "@/components/alerts/alertas";
 
 // Actualizamos el TextField para que sea morado
 declare module '@mui/material/FormControl' {
@@ -39,8 +40,16 @@ const CerraduraOpcionalAFNButton : React.FC<CerraduraOpcionalAFNButtonProps> = (
         if(selectedAFN) {
             selectedAFN.cerraduraOpcional();
             onAFNCerraduraOpcional(selectedAFN);
+            // Alerta
+            ejecutarAlerta('success', 'Cerradura Opcional aplicada', 'bottom-end');
+            setAFN('');
+            handleClose();
+        } else {
+            // Alerta
+            ejecutarAlerta('error', 'No se ha seleccionado el AFN', 'bottom-end');
+            setAFN('');
+            handleClose();
         }
-        handleClose();
     };
 
     return(
@@ -86,7 +95,7 @@ const CerraduraOpcionalAFNButton : React.FC<CerraduraOpcionalAFNButtonProps> = (
                             Selecciona el AFN al que se le aplicará la cerradura de opcional
                         </Typography>
                         <FormControl sx={{ mt: 2, minWidth: 120 }} size="small" color="purple">
-                            <InputLabel id="afn1-select-label">AFN 1</InputLabel>
+                            <InputLabel id="afn1-select-label">AFN</InputLabel>
                             <Select
                                 labelId="afn1-select-label"
                                 id="afn-select"

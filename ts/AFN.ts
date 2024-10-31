@@ -140,13 +140,14 @@ class AFN {
                 e.SetEdoAcept = false;
             }
         }
-        f2.edosAFN.delete(f2.edoIni!);
+       // f2.edosAFN.delete(f2.edoIni!);
+        f2.edosAFN=new Set([...f2.edosAFN].filter(e=>e!==f2.edoIni));
         this.edosAcept = f2.edosAcept;
         this.edosAFN = new Set([...this.edosAFN, ...f2.edosAFN]);
         this.alfabeto = new Set([...this.alfabeto, ...f2.alfabeto]);
 
         // Limpiar unido
-        f2.borrarAFD();
+        //f2.borrarAFD();
 
         /*// Impresiones para verificar el funcionamiento
         console.log(`\x1b[1m\x1b[31mConcatenación de ${this.idAFN} y ${f2.idAFN}: OK\x1b[0m`);

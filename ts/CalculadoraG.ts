@@ -1,6 +1,7 @@
 import { AnalizadorLexico } from "./AnalizadorLexico";
 import JSON from "@/ts/Calculadora.json"
 //import * as fs from 'fs';
+import { TreeNode as TreeNodeTipo } from "./Tipos"; // Asegúrate de importar el tipo correcto
 
 //! Colocar la ruta correcta del archivo AFD.json y cambiar nombre del archivo
 enum TOKEN {
@@ -20,6 +21,9 @@ const AL = new AnalizadorLexico(JSON);
 type Nodo = { name: string, children?: Nodo[] }; // Variable de tipo Nodo para guardar el árbol
 
 const data: Array<{ tree: Nodo, resultado: number }> = [];
+
+// Asegúrate de importar o definir la interfaz TreeNode
+type TreeNode = TreeNodeTipo; // Usar el tipo importado
 
 function E(resultado: { val: number }): { val: boolean, tree: Nodo } { // Funcion con un acumulador de resultado, de tipo booleano para saber si la cadena es válida y un árbol de tipo Nodo
     const temp = { val: 0 };
@@ -129,7 +133,7 @@ function guardarArbolConResultado(tree: Nodo, resultado: number, nombreArchivo: 
     const nuevoArbol = { tree, resultado };
     data.push(nuevoArbol); // Agregar el nuevo árbol al arreglo en memoria
 
-    //fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
+    // fs.writeFileSync(nombreArchivo, JSON.stringify(data, null, 2), 'utf-8');
     // console.log(`Árbol y resultado guardados en ${nombreArchivo}`);
 }
 
@@ -166,17 +170,27 @@ function recorrerPostorden(nodo: Nodo): string {
     fs.writeFileSync(nombreArchivo, '', 'utf-8');
 }*/
 
-export function parseConPostfijo(input: string): { valid: boolean, postfijo: string, resultado: number } {
+export function parseConPostfijo(input: string): { valid: boolean, postfijo: string, resultado: number, tree: TreeNode } {
     AL.SetSigma(input);
     const resultado = { val: 0 };
     const eResult = E(resultado);
 
     if (eResult.val && AL.yylex() === TOKEN.END) {
         const postfijo = recorrerPostorden(eResult.tree).trim();
-        guardarArbolConResultado(eResult.tree, resultado.val, './dump/tree.json');
-        return { valid: true, postfijo: postfijo, resultado: resultado.val };
+        const formattedTree = formatTreeForDerivation(eResult.tree); // Formatear el árbol
+        return { valid: true, postfijo: postfijo, resultado: resultado.val, tree: formattedTree }; // Retornar el árbol formateado
     }
-    return { valid: false, postfijo: "", resultado: 0 };
+    return { valid: false, postfijo: "", resultado: 0, tree: { name: "", id: "", value: "" } }; // Cambiado para evitar 'undefined'
+}
+
+// Función para formatear el árbol en el formato esperado por DerivationTree
+function formatTreeForDerivation(tree: Nodo): TreeNode {
+    return {
+        name: tree.name,
+        id: tree.name, // Asigna un id único, puedes cambiar esto según tu lógica
+        value: tree.name, // Asigna un valor, puedes cambiar esto según tu lógica
+        children: tree.children ? tree.children.map(formatTreeForDerivation) : undefined,
+    };
 }
 
 function runTestsConPostfijo() {

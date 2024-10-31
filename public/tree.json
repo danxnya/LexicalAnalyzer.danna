@@ -1,0 +1,173 @@
+[
+  {
+    "tree": {
+      "name": "E",
+      "children": [
+        {
+          "name": "T",
+          "children": [
+            {
+              "name": "F",
+              "children": [
+                {
+                  "name": "("
+                },
+                {
+                  "name": "E",
+                  "children": [
+                    {
+                      "name": "T",
+                      "children": [
+                        {
+                          "name": "F",
+                          "children": [
+                            {
+                              "name": "("
+                            },
+                            {
+                              "name": "E",
+                              "children": [
+                                {
+                                  "name": "T",
+                                  "children": [
+                                    {
+                                      "name": "F",
+                                      "children": [
+                                        {
+                                          "name": "num",
+                                          "children": [
+                                            {
+                                              "name": "1"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "T'",
+                                      "children": [
+                                        {
+                                          "name": "ε"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "E'",
+                                  "children": [
+                                    {
+                                      "name": "T",
+                                      "children": [
+                                        {
+                                          "name": "F",
+                                          "children": [
+                                            {
+                                              "name": "num",
+                                              "children": [
+                                                {
+                                                  "name": "2"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "T'",
+                                          "children": [
+                                            {
+                                              "name": "ε"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "+"
+                                    },
+                                    {
+                                      "name": "E'",
+                                      "children": [
+                                        {
+                                          "name": "ε"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": ")"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "T'",
+                          "children": [
+                            {
+                              "name": "F",
+                              "children": [
+                                {
+                                  "name": "num",
+                                  "children": [
+                                    {
+                                      "name": "3"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "*"
+                            },
+                            {
+                              "name": "T'",
+                              "children": [
+                                {
+                                  "name": "ε"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "E'",
+                      "children": [
+                        {
+                          "name": "ε"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": ")"
+                }
+              ]
+            },
+            {
+              "name": "T'",
+              "children": [
+                {
+                  "name": "ε"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "E'",
+          "children": [
+            {
+              "name": "ε"
+            }
+          ]
+        }
+      ]
+    },
+    "resultado": 9
+  }
+]

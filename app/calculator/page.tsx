@@ -8,7 +8,8 @@ import { style } from "@/components/Theme";
 import { Calculate } from "@mui/icons-material";
 import { parseConPostfijo } from "@/ts/CalculadoraG";
 import { ejecutarAlerta } from "@/components/alerts/alertas";
-import DerivationTrees from "@/components/d3/ArbolDerivacion";
+import DerivationTree from "@/components/d3/ArbolDerivacion";
+import { TreeNode } from "@/ts/Tipos";
 
 // Actualizamos el TextField para que sea morado
 declare module '@mui/material/FormControl' {
@@ -24,10 +25,12 @@ const page: React.FC = () => {
     // Agregamos estados para los resultados
     const [opPos, setOpPos] = React.useState('');
     const [res, setRes] = React.useState('');
-    const [isMounted, setIsMounted] = React.useState(false); // Nuevo estado para verificar si el componente está montado
+    const [isMounted, setIsMounted] = React.useState(false);
+    const [resultadoFinal, setResultadoFinal] = React.useState<number>(0);
+    const [treeData, setTreeData] = React.useState<TreeNode | null>(null);
 
     React.useEffect(() => {
-        setIsMounted(true); // Establece isMounted a true cuando el componente se monta
+        setIsMounted(true);
     }, []);
 
     const handleInput1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,14 +43,15 @@ const page: React.FC = () => {
             if (resultado.valid) {
                 setOpPos(resultado.postfijo.toString());
                 setRes(resultado.resultado.toString());
-                // Alerta
+                setResultadoFinal(resultado.resultado);
+                setTreeData(resultado.tree);
                 ejecutarAlerta('success', 'Operación exitosa', 'bottom-end');
-                // Reinciar los inputs
+                // Reiniciar los inputs
                 setInput1('');
             } else {
                 // Alerta
-                ejecutarAlerta('error', 'Expresión no valida', 'bottom-end');
-                // Reinciar los inputs
+                ejecutarAlerta('error', 'Expresión no válida', 'bottom-end');
+                // Reiniciar los inputs
                 setInput1('');
             }
         }
@@ -70,7 +74,7 @@ const page: React.FC = () => {
                         <div className="flex items-center justify-center text-center flex-col mb-2">
                             <TextField
                                 id="operacion"
-                                label="Ingresa una operación postfija"
+                                label="Ingresa una operación aritmetica"
                                 variant="filled"
                                 color="purple"
                                 sx={{
@@ -92,7 +96,7 @@ const page: React.FC = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {isMounted && ( // Solo renderiza si el componente está montado
+                                        {isMounted && (
                                             <TableRow>
                                                 <TableCell>{opPos}</TableCell>
                                                 <TableCell>{res}</TableCell>
@@ -117,7 +121,7 @@ const page: React.FC = () => {
                     </div>
                 </div>
                 <div className="h-max" style={{ maxHeight: '85vh', overflow: 'auto' }}>
-                    <DerivationTrees />
+                    {treeData && <DerivationTree data={treeData} resultado={resultadoFinal} />}
                 </div>
             </div>
             <GridPattern maxOpacity={0.5} className="grid-config"/>
